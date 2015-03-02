@@ -30,13 +30,8 @@ public class TestServletDao<T extends String> implements  DbService {
             ResultSet resultSet = stmt.executeQuery("select * from test");
 
             while (resultSet.next()){
-                System.out.print(resultSet.getString("test"));
+                System.out.println(resultSet.getString("test"));
             }
-
-
-            System.out.println("Connecting to sql database");
-
-
         }catch (Exception e){
             System.out.println("Database error: " + e.getMessage());
         }
