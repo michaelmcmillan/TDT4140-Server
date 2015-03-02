@@ -14,28 +14,13 @@ public class TestServletDao<T extends String> implements  DbService {
 
     private Connection conn;
     private Statement stmt;
+    private String uri;
+    private static String   user = "sql368919",
+                            password = "zK8!iQ9!",
+                            dbName = "sql368919";
 
     public  TestServletDao(){
-        String  user = "sql368919",
-                password = "zK8!iQ9!",
-                dbName = "sql368919";
-
-        String uri = "jdbc:mysql://sql3.freemysqlhosting.net:3306/" + dbName;
-
-        try{
-
-            conn = DriverManager.getConnection(uri, user, password);
-            stmt = conn.createStatement();
-
-            ResultSet resultSet = stmt.executeQuery("select * from test");
-
-            while (resultSet.next()){
-                System.out.println(resultSet.getString("test"));
-            }
-        }catch (Exception e){
-            System.out.println("Database error: " + e.getMessage());
-        }
-
+        uri = "jdbc:mysql://sql3.freemysqlhosting.net:3306/" + dbName;
     }
 
     @Override
@@ -45,11 +30,40 @@ public class TestServletDao<T extends String> implements  DbService {
 
     @Override
     public Object readOne(int id) {
+        try{
+
+            conn = DriverManager.getConnection(uri, user, password);
+            stmt = conn.createStatement();
+
+            ResultSet resultSet = stmt.executeQuery("select * from test limit 1");
+
+            while (resultSet.next()){
+                return resultSet.getString("test");
+            }
+
+        }catch (Exception e){
+            System.out.println("Database error: " + e.getMessage());
+        }
         return null;
     }
 
     @Override
     public ArrayList readAll() {
+        try{
+            ArrayList<String> arrayList = new ArrayList<>();
+
+            conn = DriverManager.getConnection(uri, user, password);
+            stmt = conn.createStatement();
+
+            ResultSet resultSet = stmt.executeQuery("select * from test limit 1");
+
+            while (resultSet.next()){
+                arrayList.add(resultSet.getString("test"));
+            }
+            return arrayList;
+        }catch (Exception e){
+            System.out.println("Database error: " + e.getMessage());
+        }
         return null;
     }
 
