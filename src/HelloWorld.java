@@ -15,6 +15,7 @@ public class HelloWorld {
             users.put("odin",   "katt");
             users.put("morten", "mus");
             users.put("lasse",  "fugl");
+            users.put("jonas",  "larve");
 
             // Check if the Authorization header is correctly formatted
             // Basic *base64string*==
