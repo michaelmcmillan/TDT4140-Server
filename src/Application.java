@@ -3,7 +3,7 @@ import authentication.AuthenticationException;
 
 import static spark.Spark.*;
 
-public class HelloWorld {
+public class Application {
     public static void main(String[] args) {
 
         setPort(1999);
