@@ -15,7 +15,8 @@ public class Application {
             try {
                 authentication.checkCredentials();
             } catch (AuthenticationException authError) {
-                halt(401, authError.getMessage());
+                System.out.println(request.ip() + ": " + authError.getMessage());
+                halt(401, "Du er ikke autentisert.");
             }
         });
 
