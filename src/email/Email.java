@@ -1,11 +1,11 @@
-package authentication;
+package email;
 
 public class Email {
     
-    private string subject;
+    private String subject;
     private String to;
-    private string from;
-    private string body;
+    private String from;
+    private String body;
 
     public Email (String to, String from, String subject, String body) {
         this.to = to; 
@@ -15,7 +15,7 @@ public class Email {
     }
     
     public boolean send () {
-        return true; 
+        return true;
     }
 
 }
