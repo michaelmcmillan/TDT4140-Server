@@ -19,8 +19,18 @@ public class Application {
             }
         });
 
-        get("/hello", (req, res) -> {
-            return "what is going on";
+        get("/", (req, res) -> {
+            return "It works!";
+        });
+
+        get("/api/v1/user", (req, res) -> {
+            res.type("application/json");
+            return "{}";
+        });
+
+        get("/api/v1/user/appointments", (req, res) -> {
+            res.type("application/json");
+            return "{}";
         });
     }
 }
