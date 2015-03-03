@@ -1,16 +1,25 @@
-import static spark.Spark.*;
+import authentication.Authentication;
+import authentication.AuthenticationException;
 
+import static spark.Spark.*;
 
 public class HelloWorld {
     public static void main(String[] args) {
-        setPort(1337);
+
+        setPort(1999);
+
+        before((request, response) -> {
+            String authHeader = request.headers("Authorization");
+            Authentication authentication = new Authentication(authHeader);
+
+            try {
+                authentication.checkCredentials();
+            } catch (AuthenticationException authError) {
+                halt(401, authError.getMessage());
+            }
+        });
 
         get("/hello", (req, res) -> {
-
-            // Hente modeller
-
-            // Hente views
-
             return "what is going on";
         });
     }
