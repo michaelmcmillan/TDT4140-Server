@@ -50,8 +50,6 @@ public class Authentication {
         String username = parseCredentials()[0];
         String password = parseCredentials()[1];
 
-        System.out.println(this.authHeader + "eefe");
-
         // Check if the username exists
         if (!users.containsKey(username))
             throw new AuthenticationException("Finnes ingen bruker med det brukernavnet.");
