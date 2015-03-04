@@ -1,5 +1,6 @@
 package database;
 
+import models.Person;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -7,11 +8,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  * Created by sharklaks on 04/03/15.
  */
-public class PersonsServletDao implements DbService{
+public class PersonsServletDao<T extends Person> implements DbService{
 
     private Connection conn;
     private Statement stmt;
@@ -25,12 +27,12 @@ public class PersonsServletDao implements DbService{
     }
 
     @Override
-    public boolean create(String entity) {
+    public boolean create(Object entity) {
         return false;
     }
 
     @Override
-    public JSONObject readOne(int id) {
+    public Object readOne(int id) {
         try{
 
             conn = DriverManager.getConnection(uri, user, password);
@@ -38,16 +40,17 @@ public class PersonsServletDao implements DbService{
 
             ResultSet resultSet = stmt.executeQuery("select * from Person where id=" + id);
             while (resultSet.next()){
-                JSONObject object = new JSONObject();
-                object.put("email", resultSet.getString("email"));
-                object.put("firstname", resultSet.getString("firstname"));
-                object.put("surname", resultSet.getString("surname"));
-                object.put("password", resultSet.getString("password"));
-                object.put("alarm_time", resultSet.getInt("alarm_time"));
-                object.put("Calendar_id", resultSet.getInt("Calendar_id"));
+                Person person = new Person();
 
+                person.setId(resultSet.getInt("id"));
+                person.setAlarmTime(resultSet.getInt("alarm_time"));
+                person.setEmail(resultSet.getString("email"));
+                person.setFirstName(resultSet.getString("firstname"));
+                person.setSurname(resultSet.getString("surname"));
+                person.setPassword(resultSet.getString("password"));
+                person.setCalendarId(resultSet.getInt("Calendar_id"));
 
-                return object;
+                return person;
             }
 
         }catch (Exception e){
@@ -57,34 +60,12 @@ public class PersonsServletDao implements DbService{
     }
 
     @Override
-    public JSONArray readAll() {
-        try{
-            JSONArray jsonArray = new JSONArray();
-
-            conn = DriverManager.getConnection(uri, user, password);
-            stmt = conn.createStatement();
-
-            ResultSet resultSet = stmt.executeQuery("select * from Person");
-
-            while (resultSet.next()){
-                JSONObject object = new JSONObject();
-                object.put("email", resultSet.getString("email"));
-                object.put("firstname", resultSet.getString("firstname"));
-                object.put("surname", resultSet.getString("surname"));
-                object.put("password", resultSet.getString("password"));
-                object.put("alarm_time", resultSet.getInt("alarm_time"));
-                object.put("Calendar_id", resultSet.getInt("Calendar_id"));
-                jsonArray.put(object);
-            }
-            return jsonArray;
-        }catch (Exception e){
-            System.out.println("Database error: " + e.getMessage());
-        }
+    public ArrayList readAll() {
         return null;
     }
 
     @Override
-    public boolean update(int id, String newObject) {
+    public boolean update(Object newObject) {
         return false;
     }
 
@@ -92,4 +73,5 @@ public class PersonsServletDao implements DbService{
     public boolean delete(int id) {
         return false;
     }
+
 }

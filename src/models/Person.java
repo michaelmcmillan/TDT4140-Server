@@ -8,40 +8,48 @@ public class Person implements Model{
 
     private PersonsServletDao personsServlet;
 
+    //****TABLE ATTRIBUTES****
+    private int id;
     private String email;
     private String firstName;
     private String surName;
     private String password;
     private int alarmTime;
     private int calendarId;
+    //************************
 
     private Calendar calendar;
 
+
+
     public Person() {
-        email = "odin@loker.no";
-        firstName = "O";
-        surName = "Dawq";
-        password = "heisann";
-        int alarmTime = -1;
+
+    }
+
+    public void update(){
+        personsServlet = new PersonsServletDao();
+        personsServlet.update(this);
+    }
+
+    public void pullFromDatabase (int id){
+        personsServlet = new PersonsServletDao();
+        Person person = (Person)personsServlet.readOne(id);
+        this.id = person.id;
+        this.firstName = person.firstName;
+        this.surName = person.surName;
+        this.password = person.password;
+        this.alarmTime = person.alarmTime;
+        this.calendarId = person.calendarId;
+    }
+
+    public void createEntity(){
+        personsServlet = new PersonsServletDao();
         calendar = new Calendar();
         calendarId = calendar.getId();
-
-        //************FJERN QUOTES****************
-        personsServlet.create("this");
-        //****************************************
+        personsServlet.create(this);
     }
 
-    public Person(int id){
-//        Person readPerson = personsServlet.readOne(id);
-//        this.id = id;
-//        this.firstName = readPerson.firstName;
-//        this.surName = readPerson.surName;
-//        this.password = readPerson.password;
-//        this.alarmTime = readPerson.alarmTime;
-//        this.calendarId = readPerson.calendarId;
-    }
-
-    public Person(JSONObject jsonObject){
+    public void createFromJson (JSONObject jsonObject){
 
     }
 
@@ -55,6 +63,9 @@ public class Person implements Model{
 
 
     /*GETTERS AND SETTERS */
+    public int getId() {
+        return id;
+    }
     public void setId(int id) {
         this.id = id;
     }
@@ -71,10 +82,10 @@ public class Person implements Model{
         this.firstName = firstName;
     }
     public String getSurname() {
-        return surname;
+        return surName;
     }
     public void setSurname(String surname) {
-        this.surname = surname;
+        this.surName = surname;
     }
     public String getPassword() {
         return password;
@@ -88,10 +99,10 @@ public class Person implements Model{
     public void setAlarmTime(int alarmTime) {
         this.alarmTime = alarmTime;
     }
-    public int getCalendar_id() {
-        return Calendar_id;
+    public int getCalendarId() {
+        return calendarId;
     }
-    public void setCalendar_id(int calendar_id) {
-        Calendar_id = calendar_id;
+    public void setCalendarId(int calendar_id) {
+        calendarId = calendar_id;
     }
 }

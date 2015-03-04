@@ -1,5 +1,6 @@
 package database;
 
+import models.Group;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -7,11 +8,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  * Created by sharklaks on 04/03/15.
  */
-public class GroupsServletDao implements DbService {
+public class GroupsServletDao<T extends Group> implements DbService {
 
     private Connection conn;
     private Statement stmt;
@@ -25,60 +27,22 @@ public class GroupsServletDao implements DbService {
     }
 
     @Override
-    public boolean create(String entity) {
+    public boolean create(Object entity) {
         return false;
     }
 
     @Override
-    public JSONObject readOne(int id) {
-        try{
-
-            conn = DriverManager.getConnection(uri, user, password);
-            stmt = conn.createStatement();
-
-            ResultSet resultSet = stmt.executeQuery("select * from Group where id=" + id);
-            while (resultSet.next()){
-                JSONObject object = new JSONObject();
-                object.put("name", resultSet.getString("name"));
-                object.put("Calendar_id", resultSet.getInt("Calendar_id"));
-                object.put("Group_name", resultSet.getString("Group_name"));
-
-
-                return object;
-            }
-
-        }catch (Exception e){
-            System.out.println("Database error: " + e.getMessage());
-        }
+    public Object readOne(int id) {
         return null;
     }
 
     @Override
-    public JSONArray readAll() {
-        try{
-            JSONArray jsonArray = new JSONArray();
-
-            conn = DriverManager.getConnection(uri, user, password);
-            stmt = conn.createStatement();
-
-            ResultSet resultSet = stmt.executeQuery("select * from sql368919.Group");
-
-            while (resultSet.next()){
-                JSONObject object = new JSONObject();
-                object.put("name", resultSet.getString("name"));
-                object.put("Calendar_id", resultSet.getInt("Calendar_id"));
-                object.put("Group_name", resultSet.getString("Group_name"));
-                jsonArray.put(object);
-            }
-            return jsonArray;
-        }catch (Exception e){
-            System.out.println("Database error: " + e.getMessage());
-        }
+    public ArrayList readAll() {
         return null;
     }
 
     @Override
-    public boolean update(int id, String newObject) {
+    public boolean update(Object newObject) {
         return false;
     }
 
