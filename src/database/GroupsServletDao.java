@@ -8,11 +8,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-
 /**
  * Created by sharklaks on 04/03/15.
  */
-public class AppointmentsServletDao implements DbService {
+public class GroupsServletDao implements DbService {
 
     private Connection conn;
     private Statement stmt;
@@ -21,7 +20,7 @@ public class AppointmentsServletDao implements DbService {
             password = "zK8!iQ9!",
             dbName = "sql368919";
 
-    public  AppointmentsServletDao(){
+    public  GroupsServletDao(){
         uri = "jdbc:mysql://sql3.freemysqlhosting.net:3306/" + dbName;
     }
 
@@ -37,16 +36,12 @@ public class AppointmentsServletDao implements DbService {
             conn = DriverManager.getConnection(uri, user, password);
             stmt = conn.createStatement();
 
-            ResultSet resultSet = stmt.executeQuery("select * from Appointment where id=" + id);
+            ResultSet resultSet = stmt.executeQuery("select * from Group where id=" + id);
             while (resultSet.next()){
                 JSONObject object = new JSONObject();
-                object.put("id", resultSet.getInt("id"));
-                object.put("tittel", resultSet.getString("tittel"));
-                object.put("description", resultSet.getString("description"));
-                object.put("Room_id", resultSet.getInt("Room_id"));
-                object.put("start_time", resultSet.getDate("start_time"));
-                object.put("end_time", resultSet.getDate("end_time"));
-                object.put("Person_email", resultSet.getString("Person_email"));
+                object.put("name", resultSet.getString("name"));
+                object.put("Calendar_id", resultSet.getInt("Calendar_id"));
+                object.put("Group_name", resultSet.getString("Group_name"));
 
 
                 return object;
@@ -66,17 +61,13 @@ public class AppointmentsServletDao implements DbService {
             conn = DriverManager.getConnection(uri, user, password);
             stmt = conn.createStatement();
 
-            ResultSet resultSet = stmt.executeQuery("select * from Appointment");
+            ResultSet resultSet = stmt.executeQuery("select * from sql368919.Group");
 
             while (resultSet.next()){
                 JSONObject object = new JSONObject();
-                object.put("id", resultSet.getInt("id"));
-                object.put("tittel", resultSet.getString("tittel"));
-                object.put("description", resultSet.getString("description"));
-                object.put("Room_id", resultSet.getInt("Room_id"));
-                object.put("start_time", resultSet.getDate("start_time"));
-                object.put("end_time", resultSet.getDate("end_time"));
-                object.put("Person_email", resultSet.getString("Person_email"));
+                object.put("name", resultSet.getString("name"));
+                object.put("Calendar_id", resultSet.getInt("Calendar_id"));
+                object.put("Group_name", resultSet.getString("Group_name"));
                 jsonArray.put(object);
             }
             return jsonArray;
