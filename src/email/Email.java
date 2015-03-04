@@ -3,57 +3,60 @@ package email;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Date;
-import java.util.Properties;
+import java.util.*;
 
 public class Email {
     
     private String subject;
-    private String to;
+    private List<String> to;
     private String from;
     private String body;
 
-
-
-    public Email (String to, String from, String subject, String body) {
+    public Email (ArrayList<String> to, String from, String subject, String body) {
         this.to = to; 
         this.from = from; 
         this.subject = subject; 
         this.body = body;
-
         send();
     }
+
+    // TODO: Overload constructor with single string
+//    public Email (String to, String from, String subject, String body) {
+//        ArrayList<String> toString = new ArrayList<String>();
+//        toString.add(to);
+//        this(toString, from, subject, body);
+//    }
     
     public boolean send () {
+        final String username = "yolo.fellesprosjekt@gmail.com";
+        final String password = "fellesprosjekternoedrit";
 
-        String to = "email@michaelmcmillan.net";
-        String from = "email@michaelmcmillan.net";
-        String host = "gmail.com";
-        boolean debug = true;
-
-        // create some properties and get the default Session
         Properties props = new Properties();
-        props.put("mail.smtp.host", host);
-        if (debug) props.put("mail.debug", debug);
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
 
-        Session session = Session.getInstance(props, null);
-        session.setDebug(debug);
-
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
         try {
-            // create a message
-            MimeMessage msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress(from));
-            InternetAddress[] address = {new InternetAddress(to)};
-            msg.setRecipients(Message.RecipientType.TO, address);
-            msg.setSubject("JavaMail APIs Test");
-            msg.setSentDate(new Date());
-            // If the desired charset is known, you can use
-            // setText(text, charset)
-            msg.setText("hehehhe");
+            for (String recipient : to) {
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress("yolo.fellesprosjekt@gmail.com"));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
+                message.setSubject(this.subject);
+                message.setText(this.body);
+                Transport.send(message);
+            }
 
-            Transport.send(msg);
+            System.out.println("Done");
+
         } catch (MessagingException mex) {
-            System.out.println("\n--Exception handling in msgsendsample.java");
+            System.out.println("\n--Exception handling in Email.java");
 
             mex.printStackTrace();
             System.out.println();
@@ -86,8 +89,8 @@ public class Email {
                 else
                     ex = null;
             } while (ex != null);
-
         }
+
         return true;
     }
 }
