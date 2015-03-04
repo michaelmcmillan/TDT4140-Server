@@ -1,11 +1,7 @@
 import authentication.Authentication;
 import authentication.AuthenticationException;
-<<<<<<< HEAD
 import email.Email;
-
-=======
 import logger.Logger;
->>>>>>> logger
 import static spark.Spark.*;
 
 public class Application {
