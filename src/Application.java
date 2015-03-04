@@ -1,13 +1,17 @@
 import authentication.Authentication;
 import authentication.AuthenticationException;
+<<<<<<< HEAD
 import email.Email;
 
+=======
+import logger.Logger;
+>>>>>>> logger
 import static spark.Spark.*;
 
 public class Application {
     public static void main(String[] args) {
 
-        setPort(1999);
+        setPort(2000);
 
         before((request, response) -> {
             String authHeader = request.headers("Authorization");
@@ -16,8 +20,8 @@ public class Application {
             try {
                 authentication.checkCredentials();
             } catch (AuthenticationException authError) {
-                System.out.println(request.ip() + ": " + authError.getMessage());
-                //halt(401, authError.getMessage());
+                Logger.console(authError.getMessage(), request.ip());
+                //halt(401, "Du er ikke autentisert.");
             }
         });
 
