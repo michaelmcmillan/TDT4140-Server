@@ -1,5 +1,8 @@
 package database;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
@@ -7,8 +10,8 @@ import java.util.ArrayList;
  */
 public interface DbService {
     public boolean create(String entity);
-    public String readOne (int id);
-    public String readAll();
+    public JSONObject readOne (int id);
+    public JSONArray readAll();
     public boolean update(int id, String newObject);
     public boolean delete(int id);
 }

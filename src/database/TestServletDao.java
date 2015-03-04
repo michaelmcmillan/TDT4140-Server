@@ -1,5 +1,8 @@
 package database;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -29,7 +32,7 @@ public class TestServletDao implements  DbService {
     }
 
     @Override
-    public Object readOne(int id) {
+    public JSONObject readOne(int id) {
         try{
 
             conn = DriverManager.getConnection(uri, user, password);
@@ -38,7 +41,7 @@ public class TestServletDao implements  DbService {
             ResultSet resultSet = stmt.executeQuery("select * from test limit 1");
 
             while (resultSet.next()){
-                return resultSet.getString("test");
+                return null;
             }
 
         }catch (Exception e){
@@ -48,7 +51,7 @@ public class TestServletDao implements  DbService {
     }
 
     @Override
-    public String readAll() {
+    public JSONArray readAll() {
         try{
             ArrayList<String> arrayList = new ArrayList<>();
 

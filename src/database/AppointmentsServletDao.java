@@ -1,9 +1,13 @@
 package database;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
 
 /**
  * Created by sharklaks on 04/03/15.
@@ -27,16 +31,25 @@ public class AppointmentsServletDao implements DbService {
     }
 
     @Override
-    public String readOne(int id) {
+    public JSONObject readOne(int id) {
         try{
 
             conn = DriverManager.getConnection(uri, user, password);
             stmt = conn.createStatement();
 
-            ResultSet resultSet = stmt.executeQuery("select * from Appointment limit 1");
-
+            ResultSet resultSet = stmt.executeQuery("select * from Appointment where id=" + id);
             while (resultSet.next()){
-                return resultSet.getString("tittel");
+                JSONObject object = new JSONObject();
+                object.put("id", resultSet.getInt("id"));
+                object.put("tittel", resultSet.getString("tittel"));
+                object.put("description", resultSet.getString("description"));
+                object.put("Room_id", resultSet.getInt("Room_id"));
+                object.put("start_time", resultSet.getDate("start_time"));
+                object.put("end_time", resultSet.getDate("end_time"));
+                object.put("Person_email", resultSet.getString("Person_email"));
+
+
+                return object;
             }
 
         }catch (Exception e){
@@ -46,7 +59,7 @@ public class AppointmentsServletDao implements DbService {
     }
 
     @Override
-    public String readAll() {
+    public JSONArray readAll() {
         return null;
     }
 
