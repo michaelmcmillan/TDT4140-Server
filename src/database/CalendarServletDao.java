@@ -1,19 +1,15 @@
 package database;
 
-import models.Group;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import models.Calendar;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 /**
  * Created by sharklaks on 04/03/15.
  */
-public class GroupsServletDao<T extends Group> implements DbService {
+public class CalendarServletDao<T extends Calendar> implements DbService {
 
     private Connection conn;
     private Statement stmt;
@@ -22,12 +18,28 @@ public class GroupsServletDao<T extends Group> implements DbService {
             password = "zK8!iQ9!",
             dbName = "sql368919";
 
-    public  GroupsServletDao(){
+    public  CalendarServletDao(){
         uri = "jdbc:mysql://sql3.freemysqlhosting.net:3306/" + dbName;
     }
 
+
     @Override
     public boolean create(Object entity) {
+        Calendar calendar = (Calendar)entity;
+        try {
+            conn = DriverManager.getConnection(uri, user, password);
+            stmt = conn.createStatement();
+
+            String values = "(" + calendar.getId() + ");";
+
+            System.out.println("insert into Calendar (id) values " + values);
+
+            stmt.execute("insert into Calendar (id) values " + values);
+
+
+        }catch (Exception e){
+            System.out.println("Database error: " + e.getMessage());
+        }
         return false;
     }
 

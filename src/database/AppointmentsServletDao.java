@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 
 /**
@@ -34,11 +33,6 @@ public class AppointmentsServletDao<T extends Appointment> implements DbService 
 
     @Override
     public Object readOne(int id) {
-        return null;
-    }
-
-    @Override
-    public ArrayList readAll() {
         return null;
     }
 

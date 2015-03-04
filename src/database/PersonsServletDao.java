@@ -28,6 +28,27 @@ public class PersonsServletDao<T extends Person> implements DbService{
 
     @Override
     public boolean create(Object entity) {
+        Person person = (Person)entity;
+        try {
+            conn = DriverManager.getConnection(uri, user, password);
+            stmt = conn.createStatement();
+
+            String values = "('";
+            values += person.getEmail() + "','";
+            values += person.getFirstName() + "','";
+            values += person.getSurname() + "','";
+            values += person.getPassword() + "',";
+            values += person.getAlarmTime() + ",";
+            values += person.getCalendarId() + ");";
+
+            System.out.println("insert into Person (email, firstname, surname, password, alarm_time, Calendar_id) values " + values);
+
+            stmt.execute("insert into Person (email, firstname, surname, password, alarm_time, Calendar_id) values " + values);
+
+
+        }catch (Exception e){
+            System.out.println("Database error: " + e.getMessage());
+        }
         return false;
     }
 
@@ -56,11 +77,6 @@ public class PersonsServletDao<T extends Person> implements DbService{
         }catch (Exception e){
             System.out.println("Database error: " + e.getMessage());
         }
-        return null;
-    }
-
-    @Override
-    public ArrayList readAll() {
         return null;
     }
 
