@@ -26,21 +26,43 @@ public class CalendarServletDao<T extends Calendar> implements DbService {
     @Override
     public boolean create(Object entity) {
         Calendar calendar = (Calendar)entity;
+
+//        calendar.setId(getNewId());
         try {
             conn = DriverManager.getConnection(uri, user, password);
             stmt = conn.createStatement();
 
-            String values = "(" + calendar.getId() + ");";
+//            String values = "(" + calendar.getId() + ");";
 
-            System.out.println("insert into Calendar (id) values " + values);
+//            System.out.println("insert into Calendar (id) values " + values);
 
-            stmt.execute("insert into Calendar (id) values " + values);
-
+            stmt.execute("INSERT INTO Calendar (name) VALUES ('jonas')");
+            int id = stmt.getGeneratedKeys().getInt("id");
+            calendar.setId(id);
+            System.out.println(id);
 
         }catch (Exception e){
             System.out.println("Database error: " + e.getMessage());
         }
         return false;
+    }
+
+    private int getNewId(){
+        try {
+            conn = DriverManager.getConnection(uri, user, password);
+            stmt = conn.createStatement();
+
+            stmt.executeQuery("select max(id) + 1 as id from Calendar");
+
+            if (stmt.getResultSet().next()){
+                return stmt.getResultSet().getInt("id");
+            }
+
+
+        }catch (Exception e){
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return 0;
     }
 
     @Override
