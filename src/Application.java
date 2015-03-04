@@ -1,5 +1,6 @@
 import authentication.Authentication;
 import authentication.AuthenticationException;
+import email.Email;
 
 import static spark.Spark.*;
 
@@ -16,11 +17,13 @@ public class Application {
                 authentication.checkCredentials();
             } catch (AuthenticationException authError) {
                 System.out.println(request.ip() + ": " + authError.getMessage());
-                halt(401, "Du er ikke autentisert.");
+                //halt(401, authError.getMessage());
             }
         });
 
         get("/", (req, res) -> {
+            new Email("lol", "lol", "lol", "lele");
+
             return "It works!";
         });
 
