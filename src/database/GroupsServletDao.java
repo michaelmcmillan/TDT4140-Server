@@ -59,6 +59,28 @@ public class GroupsServletDao<T extends Group> implements DbService {
 
     @Override
     public Object readOne(int id) {
+        try{
+
+            conn = DriverManager.getConnection(uri, user, password);
+            stmt = conn.createStatement();
+
+            ResultSet resultSet = stmt.executeQuery("select * from Gruppe where id=" + id);
+            while (resultSet.next()){
+                Group group = new Group();
+
+                group.setId(resultSet.getInt("id"));
+                group.setName(resultSet.getString("name"));
+                group.setCalendarId(resultSet.getInt("Calendar_id"));
+                if (resultSet.getInt("Gruppe_id") != 0)
+                    group.setSuperGroupId(resultSet.getInt("Gruppe_id"));
+
+
+                return group;
+            }
+
+        }catch (Exception e){
+            System.out.println("Database error: " + e.getMessage());
+        }
         return null;
     }
 

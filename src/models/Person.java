@@ -2,6 +2,7 @@ package models;
 
 
 import database.PersonsServletDao;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Person implements Model{
@@ -34,12 +35,13 @@ public class Person implements Model{
     public void pullFromDatabase (int id){
         personsServlet = new PersonsServletDao();
         Person person = (Person)personsServlet.readOne(id);
-        this.id = person.id;
-        this.firstName = person.firstName;
-        this.surName = person.surName;
-        this.password = person.password;
-        this.alarmTime = person.alarmTime;
-        this.calendarId = person.calendarId;
+        this.id = person.getId();
+        this.email = person.getEmail();
+        this.firstName = person.getFirstName();
+        this.surName = person.getSurname();
+        this.password = person.getPassword();
+        this.alarmTime = person.getAlarmTime();
+        this.calendarId = person.getCalendarId();
     }
 
     public void createEntity(){
@@ -55,8 +57,16 @@ public class Person implements Model{
     }
 
     @Override
-    public JSONObject toJSON() {
-        return null;
+    public JSONObject toJSON() throws JSONException{
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+        jsonObject.put("email", email);
+        jsonObject.put("firstname", firstName);
+        jsonObject.put("surname", surName);
+        jsonObject.put("password", password);
+        jsonObject.put("alarm_time", alarmTime);
+        jsonObject.put("Calendar_id", calendarId);
+        return jsonObject;
     }
 
 

@@ -2,8 +2,10 @@ package models;
 
 
 import database.GroupsServletDao;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class Group {
+public class Group implements Model{
 
     private GroupsServletDao groupServlet;
 
@@ -24,6 +26,28 @@ public class Group {
         calendar.createEntity();
         calendarId = calendar.getId();
         groupServlet.create(this);
+    }
+
+    public void pullFromDatabase (int id){
+        groupServlet = new GroupsServletDao();
+        Group group = (Group)groupServlet.readOne(id);
+
+        this.id = group.getId();
+        this.name = group.getName();
+        this.calendarId = group.getCalendarId();
+
+        if (group.getSuperGroupId() == 0)
+            this.superGroupId = group.getSuperGroupId();
+    }
+
+    @Override
+    public JSONObject toJSON() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+        jsonObject.put("name", name);
+        jsonObject.put("Calendar_id", calendarId);
+        jsonObject.put("Gruppe_id", superGroupId);
+        return jsonObject;
     }
 
     public int getId() {
@@ -50,4 +74,6 @@ public class Group {
     public void setSuperGroupId(int superGroupId) {
         this.superGroupId = superGroupId;
     }
+
+
 }
