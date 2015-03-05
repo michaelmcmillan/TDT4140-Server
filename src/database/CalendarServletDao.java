@@ -2,9 +2,7 @@ package database;
 
 import models.Calendar;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  * Created by sharklaks on 04/03/15.
@@ -29,18 +27,16 @@ public class CalendarServletDao<T extends Calendar> implements DbService {
 
 //        calendar.setId(getNewId());
         try {
+            int generatedKey = -1;
             conn = DriverManager.getConnection(uri, user, password);
-            stmt = conn.createStatement();
+            Statement statement = conn.createStatement();
+            statement.executeUpdate("INSERT INTO Calendar VALUES ()", Statement.RETURN_GENERATED_KEYS);
+            ResultSet keyset = statement.getGeneratedKeys();
 
-//            String values = "(" + calendar.getId() + ");";
+            if (keyset.next())  generatedKey = keyset.getInt(1);
+            calendar.setId(generatedKey);
 
-//            System.out.println("insert into Calendar (id) values " + values);
-
-            stmt.execute("INSERT INTO Calendar (name) VALUES ('jonas')");
-            int id = stmt.getGeneratedKeys().getInt("id");
-            calendar.setId(id);
-            System.out.println(id);
-
+            return  true;
         }catch (Exception e){
             System.out.println("Database error: " + e.getMessage());
         }
