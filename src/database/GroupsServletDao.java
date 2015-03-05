@@ -28,6 +28,32 @@ public class GroupsServletDao<T extends Group> implements DbService {
 
     @Override
     public boolean create(Object entity) {
+        Group group = (Group)entity;
+        try {
+            conn = DriverManager.getConnection(uri, user, password);
+            stmt = conn.createStatement();
+
+            String values = "('";
+            values += group.getName() + "',";
+            values += group.getCalendarId();
+            if (group.getSuperGroupId() > -1){
+                values += ",'" + group.getSuperGroupId() + "')";
+                stmt.execute("insert into Gruppe (name, Calendar_id, Group_id) values " + values);
+                System.out.println("insert into Group (name, Calendar_id, Group_id) values " + values);
+            }
+            else {
+                values += ")";
+                System.out.println("insert into 'Group' (name, Calendar_id) values " + values);
+
+                stmt.execute("insert into Gruppe (name, Calendar_id) values " + values);
+
+            }
+
+            return true;
+
+        }catch (Exception e){
+            System.out.println("Database error: " + e.getMessage());
+        }
         return false;
     }
 

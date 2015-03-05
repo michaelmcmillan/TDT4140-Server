@@ -25,7 +25,6 @@ public class CalendarServletDao<T extends Calendar> implements DbService {
     public boolean create(Object entity) {
         Calendar calendar = (Calendar)entity;
 
-//        calendar.setId(getNewId());
         try {
             int generatedKey = -1;
             conn = DriverManager.getConnection(uri, user, password);
