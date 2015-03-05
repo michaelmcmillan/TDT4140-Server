@@ -27,12 +27,17 @@ public class Person implements Model{
 
     }
 
-    public void update(){
+    @Override
+    public void create(){
         personsServlet = new PersonsServletDao();
-        personsServlet.update(this);
+        calendar = new Calendar();
+        calendar.createEntity();
+        calendarId = calendar.getId();
+        personsServlet.create(this);
     }
 
-    public void pullFromDatabase (int id){
+    @Override
+    public void read (int id){
         personsServlet = new PersonsServletDao();
         Person person = (Person)personsServlet.readOne(id);
         this.id = person.getId();
@@ -44,17 +49,15 @@ public class Person implements Model{
         this.calendarId = person.getCalendarId();
     }
 
-    public void createEntity(){
+    @Override
+    public void update(){
         personsServlet = new PersonsServletDao();
-        calendar = new Calendar();
-        calendar.createEntity();
-        calendarId = calendar.getId();
-        personsServlet.create(this);
+        personsServlet.update(this);
     }
 
-    public void createFromJson (JSONObject jsonObject){
 
-    }
+    @Override
+    public void delete(){}
 
     @Override
     public JSONObject toJSON() throws JSONException{

@@ -20,7 +20,9 @@ public class Group implements Model{
         this.superGroupId = -1;
     }
 
-    public void createEntity(){
+
+    @Override
+    public void create(){
         groupServlet = new GroupsServletDao();
         calendar = new Calendar();
         calendar.createEntity();
@@ -28,7 +30,8 @@ public class Group implements Model{
         groupServlet.create(this);
     }
 
-    public void pullFromDatabase (int id){
+    @Override
+    public void read (int id){
         groupServlet = new GroupsServletDao();
         Group group = (Group)groupServlet.readOne(id);
 
@@ -38,6 +41,16 @@ public class Group implements Model{
 
         if (group.getSuperGroupId() == 0)
             this.superGroupId = group.getSuperGroupId();
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public void delete() {
+
     }
 
     @Override
