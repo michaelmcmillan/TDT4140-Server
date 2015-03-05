@@ -31,7 +31,7 @@ public class Person implements Model{
     public void create(){
         personsServlet = new PersonsServletDao();
         calendar = new Calendar();
-        calendar.createEntity();
+        calendar.create();
         calendarId = calendar.getId();
         personsServlet.create(this);
     }

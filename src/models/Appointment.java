@@ -56,8 +56,12 @@ public class Appointment implements Model {
         jsonObject.put("description", description);
         jsonObject.put("start_time", startTime);
         jsonObject.put("end_time", endTime);
-        jsonObject.put("Room_id", roomId);
+
         jsonObject.put("Person_id", personId);
+
+        if (roomId == 0)    jsonObject.put("Room_id", "null");
+        else    jsonObject.put("Room_id", roomId);
+
         return jsonObject;
     }
 

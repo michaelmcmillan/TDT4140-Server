@@ -24,7 +24,7 @@ public class Group implements Model{
     @Override
     public void create(){
         calendar = new Calendar();
-        calendar.createEntity();
+        calendar.create();
         calendarId = calendar.getId();
         groupServlet.create(this);
     }
