@@ -17,13 +17,12 @@ public class Group implements Model{
     private Calendar calendar;
 
     public Group() {
-        this.superGroupId = -1;
+        groupServlet = new GroupsServletDao();
     }
 
 
     @Override
     public void create(){
-        groupServlet = new GroupsServletDao();
         calendar = new Calendar();
         calendar.createEntity();
         calendarId = calendar.getId();
@@ -32,7 +31,6 @@ public class Group implements Model{
 
     @Override
     public void read (int id){
-        groupServlet = new GroupsServletDao();
         Group group = (Group)groupServlet.readOne(id);
 
         this.id = group.getId();

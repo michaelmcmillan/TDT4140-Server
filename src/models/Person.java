@@ -24,7 +24,7 @@ public class Person implements Model{
 
 
     public Person() {
-
+        personsServlet = new PersonsServletDao();
     }
 
     @Override
@@ -38,7 +38,7 @@ public class Person implements Model{
 
     @Override
     public void read (int id){
-        personsServlet = new PersonsServletDao();
+
         Person person = (Person)personsServlet.readOne(id);
         this.id = person.getId();
         this.email = person.getEmail();
@@ -51,7 +51,6 @@ public class Person implements Model{
 
     @Override
     public void update(){
-        personsServlet = new PersonsServletDao();
         personsServlet.update(this);
     }
 
