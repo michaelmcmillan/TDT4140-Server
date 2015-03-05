@@ -9,10 +9,12 @@ public class Group implements Model{
 
     private GroupsServletDao groupServlet;
 
+    //*****TABLE ATTRIBUTES*******
     private int id;
     private String name;
     private int calendarId;
     private int superGroupId;
+    //****************************
 
     private Calendar calendar;
 

@@ -9,6 +9,7 @@ public class Appointment implements Model {
 
     AppointmentsServletDao appServlet;
 
+    //*****TABLE ATTRIBUTES*******
     private int id;
     private String tittel;
     private String description;
@@ -16,6 +17,7 @@ public class Appointment implements Model {
     private String endTime;
     private int roomId;
     private int personId;
+    //****************************
 
     public Appointment(){
         appServlet = new AppointmentsServletDao();

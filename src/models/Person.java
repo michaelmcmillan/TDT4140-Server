@@ -5,6 +5,8 @@ import database.PersonsServletDao;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class Person implements Model{
 
     private PersonsServletDao personsServlet;
@@ -19,7 +21,11 @@ public class Person implements Model{
     private int calendarId;
     //************************
 
+    //DEN PRIVATE KALENDEREN TIL PERSONEN
     private Calendar calendar;
+
+    //ALLE GRUPPER PERSONEN ER MEDLEM AV
+    private ArrayList<Group> groups;
 
 
 
