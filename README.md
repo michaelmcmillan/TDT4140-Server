@@ -4,7 +4,7 @@ Server daemon for TDT4140.
 **Hvordan bruke modellene?**
 
 Har laget modellene *Appointment*, *Calendar*, *Person* og *Gruppe*. 
-Alle implementerer fra interface **Model** som inneholder funksjonene:
+Alle implementerer interface **Model** som inneholder funksjonene:
 
 
   * **create()**: Tar nåværende objekt og lager en ny entitet i databasen med egenskapene til objektet.
