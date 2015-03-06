@@ -1,7 +1,6 @@
 package authentication;
 
 import logger.Logger;
-
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Base64;
