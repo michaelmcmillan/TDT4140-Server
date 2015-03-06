@@ -12,4 +12,4 @@ Alle implementerer interface **Model** som inneholder funksjonene:
   * **delete()**
   * **toJSON()**
 
-Alle modellene har en tom konstruktor (om du vil lage en entitet fra grunnen av eller bruke et tomt objekt), og en konstruktor som tar inn et *JSONObjekt* der man gir objektet verdiene fra *JSONObjekt*et (Brukes nar man skal hente data fra klienten).
+Alle modellene har en tom konstruktor (om du vil lage en entitet fra grunnen av eller bruke et tomt objekt), og en konstruktor som tar inn et *JSONObjekt* der man gir objektet verdiene fra *JSONObjekt*et (Brukes nar man skal konvertere data hentet fra klienten til et objekt i serveren).
