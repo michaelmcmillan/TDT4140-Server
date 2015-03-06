@@ -1,7 +1,6 @@
 # TDT4140-Server
-Server daemon for TDT4140.
 
-**Hvordan bruke modellene?**
+##**Hvordan bruke modellene?**
 
 Har laget modellene *Appointment*, *Calendar*, *Person* og *Gruppe*. 
 Alle implementerer interface **Model** som inneholder funksjonene:
