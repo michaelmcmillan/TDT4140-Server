@@ -1,5 +1,7 @@
 package authentication;
 
+import logger.Logger;
+
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Base64;
@@ -20,11 +22,9 @@ public class Authentication {
     }
 
     public String[] parseCredentials () {
-
         // Check if the Authorization header is correctly formatted
-        // Basic *base64string*==
-        if (authHeader == null
-        ||  authHeader.startsWith("Basic") == false
+        if (authHeader.isEmpty()
+        ||  authHeader.toLowerCase().startsWith("basic") == false
         ||  authHeader.split(" ").length != 2)
             throw new AuthenticationException("Ugyldig format på autentiseringsstrengen.");
         else
