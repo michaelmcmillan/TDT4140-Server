@@ -12,9 +12,9 @@ public class DatabaseConnection {
     private Statement stmt;
     private DatabaseConnection self = this;
     private String database = "fellesprosjekt";
-    private String username = "fellesprosjekt";
-    private String password = "zK8!iQ9!";
-    private String hostname = "jdbc:mysql://178.62.28.66:3306/" + database;
+    private String username = "root";
+    private String password = "";
+    private String hostname = "jdbc:mysql://127.0.0.1:3306/" + database;
 
     public DatabaseConnection () {
 

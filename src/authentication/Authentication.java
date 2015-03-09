@@ -9,7 +9,7 @@ import java.util.Base64;
 public class Authentication {
 
     private HashMap<String, String> users = new HashMap<String, String>();
-    private String authHeader;
+    private final String authHeader;
 
     public Authentication (String authHeader) {
         this.authHeader = authHeader;
@@ -19,26 +19,27 @@ public class Authentication {
     }
 
     public String[] parseCredentials () {
+        String authHeaderToBeDecoded = "";
+        Logger.console(this.authHeader);
         // Check if the Authorization header is correctly formatted
-        if (authHeader.isEmpty()
-        ||  authHeader.toLowerCase().startsWith("basic") == false
-        ||  authHeader.split(" ").length != 2)
+        if (this.authHeader == null
+        ||  this.authHeader.toLowerCase().startsWith("basic") == false
+        ||  this.authHeader.split(" ").length != 2)
             throw new AuthenticationException("Ugyldig format på autentiseringsstrengen.");
-        else
-            authHeader = authHeader.split(" ")[1];
-
+        else {
+            authHeaderToBeDecoded = authHeader.split(" ")[1];
+        }
         // Decode the base64 string
         try {
-            byte[] decoded = Base64.getDecoder().decode(authHeader);
-            authHeader = new String(decoded, "UTF-8");
+            byte[] decoded = Base64.getDecoder().decode(authHeaderToBeDecoded);
+            authHeaderToBeDecoded = new String(decoded, "UTF-8");
         } catch (UnsupportedEncodingException error) {
-            System.out.println("hehe");
-            authHeader = "null:null";
+            authHeaderToBeDecoded = "null:null";
         }
 
         // Split out the parts by colon
         // username:password
-        return authHeader.split(":");
+        return authHeaderToBeDecoded.split(":");
     }
 
     public boolean checkCredentials () {

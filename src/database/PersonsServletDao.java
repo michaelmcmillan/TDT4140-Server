@@ -1,180 +1,182 @@
 package database;
 
+import logger.Logger;
 import models.Appointment;
 import models.Group;
 import models.Person;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.xml.crypto.Data;
 import java.lang.reflect.Array;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
-/**
- * Created by sharklaks on 04/03/15.
- */
+
 public class PersonsServletDao<T extends Person> implements DbService{
 
-    private Connection conn;
-    private Statement stmt;
-    private String uri;
-    private static String   user = "fellesprosjekt",
-            password = "zK8!iQ9!",
-            dbName = "fellesprosjekt";
-
-    public  PersonsServletDao(){
-        uri = "jdbc:mysql://littlist.no:3306/" + dbName;
-    }
-
+    DatabaseConnection database = new DatabaseConnection();
 
     public ArrayList<Appointment> readAllAppointments(int id){
-        try{
 
-            conn = DriverManager.getConnection(uri, user, password);
-            stmt = conn.createStatement();
+        ArrayList<Appointment> appointments = new ArrayList<>();
 
-            ResultSet resultSet = stmt.executeQuery("SELECT id, tittel, description, start_time, end_time, Room_id, Appointment.Person_id FROM Person_has_Appointment join Appointment ON Person_has_Appointment.Appointment_id=id WHERE Person_has_Appointment.Person_id=" + id);
+        String select =
+                "SELECT id, tittel, description, start_time, " +
+                "end_time, Room_id, Appointment.Person_id " +
+                "FROM Person_has_Appointment " +
+                    "JOIN Appointment ON Person_has_Appointment.Appointment_id=id " +
+                "WHERE Person_has_Appointment.Person_id= ?";
 
-            ArrayList<Appointment> appointments = new ArrayList<>();
-            while (resultSet.next()){
+        try {
+
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(select);
+            preppedStatement.setInt(1, id);
+
+            ResultSet rows = preppedStatement.executeQuery();
+
+            while (rows.next()) {
                 Appointment appointment = new Appointment();
 
-                appointment.setId(resultSet.getInt("id"));
-                appointment.setTittel(resultSet.getString("tittel"));
-                appointment.setDescription(resultSet.getString("description"));
-                appointment.setStartTime(resultSet.getString("start_time"));
-                appointment.setEndTime(resultSet.getString("end_time"));
-                appointment.setRoomId(resultSet.getInt("Room_id"));
-                appointment.setPersonId(resultSet.getInt("Person_id"));
+                appointment.setId         (rows.getInt("id"));
+                appointment.setTittel     (rows.getString("tittel"));
+                appointment.setDescription(rows.getString("description"));
+                appointment.setStartTime  (rows.getString("start_time"));
+                appointment.setEndTime    (rows.getString("end_time"));
+                appointment.setRoomId     (rows.getInt("Room_id"));
+                appointment.setPersonId   (rows.getInt("Person_id"));
 
                 appointments.add(appointment);
             }
-
+        } catch (SQLException error) {
+            Logger.console(error.getMessage());
+        } finally {
             return appointments;
-
-        }catch (Exception e){
-            System.out.println("Database error: " + e.getMessage());
         }
-        return null;
     }
 
     public ArrayList<Group> readAllGroups(int id){
-        try{
+        ArrayList<Group> groups = new ArrayList<>();
 
-            conn = DriverManager.getConnection(uri, user, password);
-            stmt = conn.createStatement();
+        String select =
+                "SELECT id, name, Calendar_id, Person_has_Gruppe.Gruppe_id " +
+                        "FROM Person_has_Gruppe " +
+                        "JOIN Gruppe ON Person_has_Gruppe.Gruppe_id = id " +
+                        "WHERE Person_id.Person_id = ?";
+        try {
 
-            ResultSet resultSet = stmt.executeQuery("SELECT id, name, Calendar_id, Person_has_Gruppe.Gruppe_id FROM Person_has_Gruppe join Gruppe ON Person_has_Gruppe.Gruppe_id=id WHERE Person_id=" + id);
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(select);
+            preppedStatement.setInt(1, id);
 
-            ArrayList<Group> groups = new ArrayList<>();
-            while (resultSet.next()){
-                Group group = new Group();
+            ResultSet rows = preppedStatement.executeQuery();
 
-                group.setId(resultSet.getInt("id"));
-                group.setName(resultSet.getString("name"));
-                group.setCalendarId(resultSet.getInt("Calendar_id"));
-                if (resultSet.getInt("Gruppe_id") != 0)
-                    group.setSuperGroupId(resultSet.getInt("Gruppe_id"));
+            while (rows.next()) {
+                Group group= new Group();
 
+                group.setId(rows.getInt("id"));
+                group.setName(rows.getString("name"));
+                group.setCalendarId(rows.getInt("Calendar_id"));
+                if (rows.getInt("Gruppe_id") != 0)
+                    group.setSuperGroupId(rows.getInt("Gruppe_id"));
 
                 groups.add(group);
             }
-
+        } catch (SQLException error) {
+            Logger.console(error.getMessage());
+        } finally {
             return groups;
-
-        }catch (Exception e){
-            System.out.println("Database error: " + e.getMessage());
         }
-        return null;
     }
 
-    @Override
-    public boolean create(Object entity) {
-        Person person = (Person)entity;
+    public boolean create (Object entity) {
+        Person person = (Person) entity;
+
+        String insert =
+                "INSERT INTO Person (email, firstname, surname, password, alarm_time, Calendar_id) " +
+                "(?, ?, ?, ?, ?, ?)";
         try {
-            conn = DriverManager.getConnection(uri, user, password);
-            stmt = conn.createStatement();
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(insert);
+            preppedStatement.setString(1, person.getEmail());
+            preppedStatement.setString(2, person.getFirstName());
+            preppedStatement.setString(3, person.getSurname());
+            preppedStatement.setString(4, person.getPassword());
+            preppedStatement.setInt(   5, person.getAlarmTime());
+            preppedStatement.setInt(   6, person.getCalendarId());
 
-            String values = "('";
-            values += person.getEmail() + "','";
-            values += person.getFirstName() + "','";
-            values += person.getSurname() + "','";
-            values += person.getPassword() + "',";
-            values += person.getAlarmTime() + ",";
-            values += person.getCalendarId() + ");";
+            preppedStatement.executeQuery();
 
-            System.out.println("insert into Person (email, firstname, surname, password, alarm_time, Calendar_id) values " + values);
-
-            stmt.execute("insert into Person (email, firstname, surname, password, alarm_time, Calendar_id) values " + values);
-
-
-        }catch (Exception e){
-            System.out.println("Database error: " + e.getMessage());
+        } catch (SQLException error) {
+            Logger.console(error.getMessage());
         }
-        return false;
+
+        return true;
     }
 
     @Override
     public Object readOne(int id) {
-        try{
+        String select = "SELECT * FROM Person WHERE id=" + 1;
 
-            conn = DriverManager.getConnection(uri, user, password);
-            stmt = conn.createStatement();
+        try {
 
-            ResultSet resultSet = stmt.executeQuery("select * from Person where id=" + id);
-            while (resultSet.next()){
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(select);
+
+            ResultSet rows = preppedStatement.executeQuery();
+
+            while (rows.next()){
                 Person person = new Person();
 
-                person.setId(resultSet.getInt("id"));
-                person.setAlarmTime(resultSet.getInt("alarm_time"));
-                person.setEmail(resultSet.getString("email"));
-                person.setFirstName(resultSet.getString("firstname"));
-                person.setSurname(resultSet.getString("surname"));
-                person.setPassword(resultSet.getString("password"));
-                person.setCalendarId(resultSet.getInt("Calendar_id"));
+                person.setId(rows.getInt("id"));
+                person.setAlarmTime(rows.getInt("alarm_time"));
+                person.setEmail(rows.getString("email"));
+                person.setFirstName(rows.getString("firstname"));
+                person.setSurname(rows.getString("surname"));
+                person.setPassword(rows.getString("password"));
+                person.setCalendarId(rows.getInt("Calendar_id"));
 
                 return person;
             }
-
-        }catch (Exception e){
+        } catch (Exception e){
             System.out.println("Database error: " + e.getMessage());
+        } finally {
+            return new Person();
         }
-        return null;
     }
 
     @Override
     public ArrayList<Person> readAll(){
-        try{
+        ArrayList<Person> persons = new ArrayList<>();
 
-            conn = DriverManager.getConnection(uri, user, password);
-            stmt = conn.createStatement();
+        String select = "SELECT * FROM Person";
 
-            ResultSet resultSet = stmt.executeQuery("select * from Person");
+        try {
 
-            ArrayList<Person> allPersons = new ArrayList<>();
-            while (resultSet.next()){
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(select);
+
+            ResultSet rows = preppedStatement.executeQuery();
+
+            while (rows.next()){
                 Person person = new Person();
 
-                person.setId(resultSet.getInt("id"));
-                person.setAlarmTime(resultSet.getInt("alarm_time"));
-                person.setEmail(resultSet.getString("email"));
-                person.setFirstName(resultSet.getString("firstname"));
-                person.setSurname(resultSet.getString("surname"));
-                person.setPassword(resultSet.getString("password"));
-                person.setCalendarId(resultSet.getInt("Calendar_id"));
+                person.setId(rows.getInt("id"));
+                person.setAlarmTime(rows.getInt("alarm_time"));
+                person.setEmail(rows.getString("email"));
+                person.setFirstName(rows.getString("firstname"));
+                person.setSurname(rows.getString("surname"));
+                person.setPassword(rows.getString("password"));
+                person.setCalendarId(rows.getInt("Calendar_id"));
 
-                allPersons.add(person);
+                persons.add(person);
             }
-
-            return allPersons;
-
-        }catch (Exception e){
+        } catch (Exception e){
             System.out.println("Database error: " + e.getMessage());
+        } finally {
+            return persons;
         }
-        return null;
     }
 
     @Override
