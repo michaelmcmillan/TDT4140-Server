@@ -1,5 +1,7 @@
 package authentication;
 
+import models.Person;
+
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Base64;
@@ -11,12 +13,9 @@ public class Authentication {
 
     public Authentication (String authHeader) {
         this.authHeader = authHeader;
-
-        users.put("mike",   "hund");
-        users.put("odin",   "katt");
-        users.put("morten", "mus");
-        users.put("lasse",  "fugl");
-        users.put("jonas",  "larve");
+        for (Person person: Person.getAll()) {
+            users.put(person.getEmail(), person.getPassword());
+        }
     }
 
     public String[] parseCredentials () {
