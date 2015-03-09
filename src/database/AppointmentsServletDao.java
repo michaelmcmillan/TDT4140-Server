@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 
 /**
@@ -18,12 +19,12 @@ public class AppointmentsServletDao<T extends Appointment> implements DbService 
     private Connection conn;
     private Statement stmt;
     private String uri;
-    private static String   user = "sql368919",
+    private static String   user = "fellesprosjekt",
             password = "zK8!iQ9!",
-            dbName = "sql368919";
+            dbName = "fellesprosjekt";
 
     public  AppointmentsServletDao(){
-        uri = "jdbc:mysql://sql3.freemysqlhosting.net:3306/" + dbName;
+        uri = "jdbc:mysql://littlist.no:3306/" + dbName;
     }
 
     @Override
@@ -84,6 +85,11 @@ public class AppointmentsServletDao<T extends Appointment> implements DbService 
         }catch (Exception e){
             System.out.println("Database error: " + e.getMessage());
         }
+        return null;
+    }
+
+    @Override
+    public ArrayList readAll() {
         return null;
     }
 

@@ -3,6 +3,7 @@ package database;
 import models.Calendar;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Created by sharklaks on 04/03/15.
@@ -12,12 +13,12 @@ public class CalendarServletDao<T extends Calendar> implements DbService {
     private Connection conn;
     private Statement stmt;
     private String uri;
-    private static String   user = "sql368919",
+    private static String   user = "fellesprosjekt",
             password = "zK8!iQ9!",
-            dbName = "sql368919";
+            dbName = "fellesprosjekt";
 
     public  CalendarServletDao(){
-        uri = "jdbc:mysql://sql3.freemysqlhosting.net:3306/" + dbName;
+        uri = "jdbc:mysql://littlist.no:3306/" + dbName;
     }
 
 
@@ -62,6 +63,11 @@ public class CalendarServletDao<T extends Calendar> implements DbService {
 
     @Override
     public Object readOne(int id) {
+        return null;
+    }
+
+    @Override
+    public ArrayList readAll() {
         return null;
     }
 

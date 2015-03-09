@@ -19,12 +19,16 @@ public class Calendar implements Model{
     private int id;
     //*********THATS IT***********
 
+    private void fetchAppointments(){
+
+    }
+
 
     public JSONArray appointmentsToJSON(){
         return new JSONArray();
     }
 
-
+    @Override
     public void create(){
         CalendarServletDao servlet = new CalendarServletDao();
         servlet.create(this);

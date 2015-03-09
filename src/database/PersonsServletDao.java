@@ -18,12 +18,12 @@ public class PersonsServletDao<T extends Person> implements DbService{
     private Connection conn;
     private Statement stmt;
     private String uri;
-    private static String   user = "sql368919",
+    private static String   user = "fellesprosjekt",
             password = "zK8!iQ9!",
-            dbName = "sql368919";
+            dbName = "fellesprosjekt";
 
     public  PersonsServletDao(){
-        uri = "jdbc:mysql://sql3.freemysqlhosting.net:3306/" + dbName;
+        uri = "jdbc:mysql://littlist.no:3306/" + dbName;
     }
 
     @Override
@@ -73,6 +73,38 @@ public class PersonsServletDao<T extends Person> implements DbService{
 
                 return person;
             }
+
+        }catch (Exception e){
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<Person> readAll(){
+        try{
+
+            conn = DriverManager.getConnection(uri, user, password);
+            stmt = conn.createStatement();
+
+            ResultSet resultSet = stmt.executeQuery("select * from Person");
+
+            ArrayList<Person> allPersons = new ArrayList<>();
+            while (resultSet.next()){
+                Person person = new Person();
+
+                person.setId(resultSet.getInt("id"));
+                person.setAlarmTime(resultSet.getInt("alarm_time"));
+                person.setEmail(resultSet.getString("email"));
+                person.setFirstName(resultSet.getString("firstname"));
+                person.setSurname(resultSet.getString("surname"));
+                person.setPassword(resultSet.getString("password"));
+                person.setCalendarId(resultSet.getInt("Calendar_id"));
+
+                allPersons.add(person);
+            }
+
+            return allPersons;
 
         }catch (Exception e){
             System.out.println("Database error: " + e.getMessage());
