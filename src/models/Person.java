@@ -42,6 +42,10 @@ public class Person implements Model{
         return personsServlet.readAllGroups(id);
     }
 
+    public ArrayList<Appointment> getAllAppointments(){
+        return personsServlet.readAllAppointments(id);
+    }
+
     public void addGroup(Group group){
         groups.add(group);
     }

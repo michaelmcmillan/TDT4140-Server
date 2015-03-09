@@ -36,7 +36,7 @@ public class PersonsServletDao<T extends Person> implements DbService{
             conn = DriverManager.getConnection(uri, user, password);
             stmt = conn.createStatement();
 
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM Person_has_Appointment join Appointment ON Person_has_Appointment.Appointment_id=id WHERE Person_id=" + id);
+            ResultSet resultSet = stmt.executeQuery("SELECT id, tittel, description, start_time, end_time, Room_id, Appointment.Person_id FROM Person_has_Appointment join Appointment ON Person_has_Appointment.Appointment_id=id WHERE Person_has_Appointment.Person_id=" + id);
 
             ArrayList<Appointment> appointments = new ArrayList<>();
             while (resultSet.next()){
