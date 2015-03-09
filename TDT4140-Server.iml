@@ -10,5 +10,6 @@
     <orderEntry type="library" name="com.sparkjava:spark-core:2.1" level="project" />
     <orderEntry type="library" name="com.sparkjava:spark-core:2.0.0" level="project" />
     <orderEntry type="library" name="javax.mail" level="project" />
+    <orderEntry type="library" name="org.json:com.springsource.org.json:1.0.0" level="project" />
   </component>
 </module>

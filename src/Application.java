@@ -22,8 +22,6 @@ public class Application {
         });
 
         get("/", (req, res) -> {
-            new Email("lol", "lol", "lol", "lele");
-
             return "It works!";
         });
 
