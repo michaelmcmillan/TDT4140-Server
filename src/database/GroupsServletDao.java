@@ -18,12 +18,12 @@ public class GroupsServletDao<T extends Group> implements DbService {
     private Connection conn;
     private Statement stmt;
     private String uri;
-    private static String   user = "sql368919",
+    private static String   user = "fellesprosjekt",
             password = "zK8!iQ9!",
-            dbName = "sql368919";
+            dbName = "fellesprosjekt";
 
     public  GroupsServletDao(){
-        uri = "jdbc:mysql://sql3.freemysqlhosting.net:3306/" + dbName;
+        uri = "jdbc:mysql://littlist.no:3306/" + dbName;
     }
 
     @Override
@@ -81,6 +81,11 @@ public class GroupsServletDao<T extends Group> implements DbService {
         }catch (Exception e){
             System.out.println("Database error: " + e.getMessage());
         }
+        return null;
+    }
+
+    @Override
+    public ArrayList readAll() {
         return null;
     }
 

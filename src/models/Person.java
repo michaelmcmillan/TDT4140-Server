@@ -2,9 +2,11 @@ package models;
 
 
 import database.PersonsServletDao;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Person implements Model{
@@ -21,11 +23,10 @@ public class Person implements Model{
     private int calendarId;
     //************************
 
-    //DEN PRIVATE KALENDEREN TIL PERSONEN
     private Calendar calendar;
 
-    //ALLE GRUPPER PERSONEN ER MEDLEM AV
     private ArrayList<Group> groups;
+    private ArrayList<Appointment> appointments;
 
 
 
@@ -33,6 +34,42 @@ public class Person implements Model{
         personsServlet = new PersonsServletDao();
     }
 
+    public void addAppointment(Appointment appointment){
+        appointments.add(appointment);
+    }
+
+    public ArrayList<Group> getAllGroups(){
+        return personsServlet.readAllGroups(id);
+    }
+
+    public ArrayList<Appointment> getAllAppointments(){
+        return personsServlet.readAllAppointments(id);
+    }
+
+    public void addGroup(Group group){
+        groups.add(group);
+    }
+
+
+    private void fetchAppointments(){
+
+    }
+
+    private void fetchGroups(){
+
+    }
+
+    public JSONArray appointmentsToJSON(){
+        return new JSONArray();
+    }
+
+    public JSONArray groupsToJSON(){
+        return new JSONArray();
+    }
+
+
+
+    //*******************OVERRIDE METHODS****************************
     @Override
     public void create(){
         personsServlet = new PersonsServletDao();
@@ -76,12 +113,23 @@ public class Person implements Model{
         jsonObject.put("Calendar_id", calendarId);
         return jsonObject;
     }
+    //*************************************************************
+
+
+
+
+    //*******************STATIC METHODS****************************
+    public static ArrayList<Person> getAll (){
+        PersonsServletDao personsServlet = new PersonsServletDao();
+        return personsServlet.readAll();
+    }
+    //*************************************************************
 
 
 
 
 
-    /*GETTERS AND SETTERS */
+    //*******************GETTERS AND SETTERS **********************
     public int getId() {
         return id;
     }
@@ -124,4 +172,18 @@ public class Person implements Model{
     public void setCalendarId(int calendar_id) {
         calendarId = calendar_id;
     }
+    public ArrayList<Group> getGroups() {
+        return groups;
+    }
+    public void setGroups(ArrayList<Group> groups) {
+        this.groups = groups;
+    }
+    public ArrayList<Appointment> getAppointments() {
+        return appointments;
+    }
+    public void setAppointments(ArrayList<Appointment> appointments) {
+        this.appointments = appointments;
+    }
+    //*************************************************************
+
 }
