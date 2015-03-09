@@ -126,6 +126,7 @@ public class PersonsServletDao<T extends Person> implements DbService{
 
             ResultSet rows = preppedStatement.executeQuery();
 
+
             while (rows.next()){
                 Person person = new Person();
 
@@ -141,9 +142,8 @@ public class PersonsServletDao<T extends Person> implements DbService{
             }
         } catch (Exception e){
             System.out.println("Database error: " + e.getMessage());
-        } finally {
-            return new Person();
         }
+        return null;
     }
 
     @Override

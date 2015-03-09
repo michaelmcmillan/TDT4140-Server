@@ -16,13 +16,37 @@ import java.util.ArrayList;
  */
 public class JSONTranslator {
 
-    public static Group groupFromJSON(JSONObject jsonObject) throws JSONException{
+    public static Group toGroup(JSONObject jsonObject) throws JSONException{
         Group group = new Group();
         group.setId(jsonObject.getInt("id"));
         group.setName(jsonObject.getString("name"));
         group.setCalendarId(jsonObject.getInt("Calendar_id"));
         group.setSuperGroupId(jsonObject.getInt("Gruppe_id"));
         return group;
+    }
+
+    public static Person toPerson(JSONObject jsonObject) throws JSONException{
+        Person person = new Person();
+        person.setId(jsonObject.getInt("id"));
+        person.setEmail(jsonObject.getString("email"));
+        person.setFirstName(jsonObject.getString("firstname"));
+        person.setSurname(jsonObject.getString("surname"));
+        person.setPassword(jsonObject.getString("password"));
+        person.setAlarmTime(jsonObject.getInt("alarm_time"));
+        person.setCalendarId(jsonObject.getInt("Calendar_id"));
+        return person;
+    }
+
+    public static Appointment toAppointment(JSONObject jsonObject) throws JSONException{
+        Appointment appointment = new Appointment();
+        appointment.setId(jsonObject.getInt("id"));
+        appointment.setTittel(jsonObject.getString("tittel"));
+        appointment.setDescription(jsonObject.getString("description"));
+        appointment.setStartTime(jsonObject.getString("start_time"));
+        appointment.setEndTime(jsonObject.getString("end_time"));
+        appointment.setRoomId(jsonObject.getInt("Room_id"));
+        appointment.setPersonId(jsonObject.getInt("Person_id"));
+        return appointment;
     }
 
     public static JSONObject toJSON(Person person) throws JSONException{
