@@ -12,6 +12,7 @@ import java.util.ArrayList;
  */
 public class Calendar implements Model{
 
+    private CalendarServletDao servlet;
 
     private ArrayList<Appointment> appointments;
 
@@ -19,8 +20,16 @@ public class Calendar implements Model{
     private int id;
     //*********THATS IT***********
 
+    public Calendar (){
+        servlet = new CalendarServletDao();
+    }
+
     private void fetchAppointments(){
 
+    }
+
+    public ArrayList<Appointment> getAllAppointments(){
+        return servlet.readAllAppointments(id);
     }
 
 
@@ -30,7 +39,6 @@ public class Calendar implements Model{
 
     @Override
     public void create(){
-        CalendarServletDao servlet = new CalendarServletDao();
         servlet.create(this);
     }
 

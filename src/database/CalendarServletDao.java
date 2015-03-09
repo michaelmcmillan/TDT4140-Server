@@ -1,5 +1,6 @@
 package database;
 
+import models.Appointment;
 import models.Calendar;
 
 import java.sql.*;
@@ -21,6 +22,36 @@ public class CalendarServletDao<T extends Calendar> implements DbService {
         uri = "jdbc:mysql://littlist.no:3306/" + dbName;
     }
 
+    public ArrayList<Appointment> readAllAppointments(int id) {
+        try {
+
+            conn = DriverManager.getConnection(uri, user, password);
+            stmt = conn.createStatement();
+            String queryString = "SELECT id, tittel, description, start_time, end_time, Room_id, Person_id FROM fellesprosjekt.Appointment_has_Calendar join fellesprosjekt.Appointment ON Appointment_has_Calendar.Appointment_id=Appointment.id Where Calendar_id=" + id;
+            ResultSet resultSet = stmt.executeQuery(queryString);
+
+            ArrayList<Appointment> appointments = new ArrayList<>();
+            while (resultSet.next()) {
+                Appointment appointment = new Appointment();
+
+                appointment.setId(resultSet.getInt("id"));
+                appointment.setTittel(resultSet.getString("tittel"));
+                appointment.setDescription(resultSet.getString("description"));
+                appointment.setStartTime(resultSet.getString("start_time"));
+                appointment.setEndTime(resultSet.getString("end_time"));
+                appointment.setRoomId(resultSet.getInt("Room_id"));
+                appointment.setPersonId(resultSet.getInt("Person_id"));
+
+                appointments.add(appointment);
+            }
+
+            return appointments;
+
+        } catch (Exception e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return null;
+    }
 
     @Override
     public boolean create(Object entity) {
