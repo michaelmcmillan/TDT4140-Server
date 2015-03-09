@@ -6,6 +6,7 @@ import models.Person;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONString;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -15,6 +16,14 @@ import java.util.ArrayList;
  */
 public class JSONTranslator {
 
+    public static Group groupFromJSON(JSONObject jsonObject) throws JSONException{
+        Group group = new Group();
+        group.setId(jsonObject.getInt("id"));
+        group.setName(jsonObject.getString("name"));
+        group.setCalendarId(jsonObject.getInt("Calendar_id"));
+        group.setSuperGroupId(jsonObject.getInt("Gruppe_id"));
+        return group;
+    }
 
     public static JSONObject toJSON(Person person) throws JSONException{
         JSONObject jsonObject = new JSONObject();
@@ -93,7 +102,6 @@ public class JSONTranslator {
             jsonObject.put("Gruppe_id", group.getSuperGroupId());
             jsonArray.put(jsonObject);
         }
-
         return jsonArray;
     }
 
