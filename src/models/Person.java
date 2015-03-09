@@ -101,18 +101,6 @@ public class Person implements Model{
     @Override
     public void delete(){}
 
-    @Override
-    public JSONObject toJSON() throws JSONException{
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", id);
-        jsonObject.put("email", email);
-        jsonObject.put("firstname", firstName);
-        jsonObject.put("surname", surName);
-        jsonObject.put("password", password);
-        jsonObject.put("alarm_time", alarmTime);
-        jsonObject.put("Calendar_id", calendarId);
-        return jsonObject;
-    }
     //*************************************************************
 
 

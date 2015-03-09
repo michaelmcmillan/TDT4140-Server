@@ -57,10 +57,6 @@ public class Calendar implements Model{
 
     }
 
-    @Override
-    public JSONObject toJSON() throws JSONException {
-        return null;
-    }
 
     public int getId() {
         return id;

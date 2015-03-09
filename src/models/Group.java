@@ -53,15 +53,6 @@ public class Group implements Model{
 
     }
 
-    @Override
-    public JSONObject toJSON() throws JSONException {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", id);
-        jsonObject.put("name", name);
-        jsonObject.put("Calendar_id", calendarId);
-        jsonObject.put("Gruppe_id", superGroupId);
-        return jsonObject;
-    }
 
     public int getId() {
         return id;

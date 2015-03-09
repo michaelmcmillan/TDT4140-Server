@@ -11,6 +11,4 @@ public interface Model {
     public void update();
     public void delete();
 
-    public JSONObject toJSON() throws JSONException;
-
 }

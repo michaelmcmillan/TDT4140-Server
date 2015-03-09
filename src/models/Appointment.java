@@ -50,23 +50,6 @@ public class Appointment implements Model {
 
     }
 
-    @Override
-    public JSONObject toJSON() throws JSONException {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", id);
-        jsonObject.put("tittel", tittel);
-        jsonObject.put("description", description);
-        jsonObject.put("start_time", startTime);
-        jsonObject.put("end_time", endTime);
-
-        jsonObject.put("Person_id", personId);
-
-        if (roomId == 0)    jsonObject.put("Room_id", "null");
-        else    jsonObject.put("Room_id", roomId);
-
-        return jsonObject;
-    }
-
     public AppointmentsServletDao getAppServlet() {
         return appServlet;
     }
