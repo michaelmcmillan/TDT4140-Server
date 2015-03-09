@@ -16,6 +16,30 @@ import java.util.ArrayList;
  */
 public class JSONTranslator {
 
+    public static ArrayList<Group> toGroupArrayList(JSONArray jsonArray) throws JSONException{
+        ArrayList<Group> groups = new ArrayList<>();
+        for (int i = 0 ; i <jsonArray.length() ; i ++){
+            groups.add(toGroup(jsonArray.getJSONObject(i)));
+        }
+        return groups;
+    }
+
+    public static ArrayList<Person> toPersonArrayList(JSONArray jsonArray) throws JSONException{
+        ArrayList<Person> persons = new ArrayList<>();
+        for (int i = 0 ; i <jsonArray.length() ; i ++){
+            persons.add(toPerson(jsonArray.getJSONObject(i)));
+        }
+        return persons;
+    }
+
+    public static ArrayList<Appointment> toAppointmentArrayList(JSONArray jsonArray) throws JSONException{
+        ArrayList<Appointment> appointments = new ArrayList<>();
+        for (int i = 0 ; i <jsonArray.length() ; i ++){
+            appointments.add(toAppointment(jsonArray.getJSONObject(i)));
+        }
+        return appointments;
+    }
+
     public static Group toGroup(JSONObject jsonObject) throws JSONException{
         Group group = new Group();
         group.setId(jsonObject.getInt("id"));
