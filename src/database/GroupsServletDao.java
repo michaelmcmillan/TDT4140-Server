@@ -33,7 +33,6 @@ public class GroupsServletDao<T extends Group> implements DbService {
             preppedStatement.setInt(    2, group.getCalendarId());
             preppedStatement.setInt(    3, group.getSuperGroupId());
             preppedStatement.executeQuery();
-
         } catch (SQLException error) {
             Logger.console(error.getMessage());
         }

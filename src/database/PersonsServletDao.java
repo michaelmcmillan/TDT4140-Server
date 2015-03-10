@@ -94,7 +94,7 @@ public class PersonsServletDao<T extends Person> implements DbService{
         Person person = (Person) entity;
 
         String insert =
-                "INSERT INTO Person (email, firstname, surname, password, alarm_time, Calendar_id) " +
+                "INSERT INTO Person (email, firstname, surname, password, alarm_time, Calendar_id) VALUES" +
                 "(?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement preppedStatement = null;
@@ -106,7 +106,7 @@ public class PersonsServletDao<T extends Person> implements DbService{
             preppedStatement.setInt(   5, person.getAlarmTime());
             preppedStatement.setInt(   6, person.getCalendarId());
 
-            preppedStatement.executeQuery();
+            preppedStatement.execute();
 
         } catch (SQLException error) {
             Logger.console(error.getMessage());
