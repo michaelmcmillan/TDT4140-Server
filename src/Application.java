@@ -5,6 +5,7 @@ import email.Email;
 import json.JSONTranslator;
 import logger.Logger;
 import models.Appointment;
+import models.Calendar;
 import models.Group;
 import models.Person;
 
@@ -32,26 +33,44 @@ public class Application {
 //            }
 //
 //        });
-
-        get("/", (req, res) -> {
-            ArrayList<Person> folks = Person.getAll();
-
-            res.type("application/json");
-            return "{}";
+        
+        get("/appointment/:appointmentId", (req, res) ->{
+            Appointment appointment = new Appointment();
+            appointment.read(Integer.parseInt(req.params("appointmentId")));
+            return JSONTranslator.toJSON(appointment);
         });
 
-        get("/:userId/appointments", (req, res) -> {
+        get("/group/:groupId", (req, res) ->{
+            Group group = new Group();
+            group.read(Integer.parseInt(req.params("groupId")));
+            return JSONTranslator.toJSON(group);
+        });
+
+        get("/user/:userId", (req, res) -> {
+            Person person = new Person();
+            person.read(Integer.parseInt(req.params("userId")));
+            return JSONTranslator.toJSON(person);
+        });
+
+        get("/user/:userId/appointments", (req, res) -> {
             Person person = new Person();
             person.read(Integer.parseInt(req.params("userId")));
             ArrayList<Appointment> appointments = person.getAllAppointments();
             return JSONTranslator.toJSONAppointments(appointments);
         });
 
-        get("/:userId/groups", (req, res) -> {
+        get("/user/:userId/groups", (req, res) -> {
             Person person = new Person();
             person.read(Integer.parseInt(req.params("userId")));
             ArrayList<Group> groups = person.getAllGroups();
             return JSONTranslator.toJSONGroups(groups);
+        });
+
+        get("/calendar/:calendarId/appointments", (req, res) -> {
+            Calendar calendar = new Calendar();
+            calendar.setId(Integer.parseInt(req.params("calendarId")));
+            ArrayList<Appointment> appointments = calendar.getAllAppointments();
+            return JSONTranslator.toJSONAppointments(appointments);
         });
 
         get("/api/v1/user", (req, res) -> {
