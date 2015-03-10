@@ -2,7 +2,10 @@ import authentication.Authentication;
 import authentication.AuthenticationException;
 import database.DatabaseConnection;
 import email.Email;
+import json.JSONTranslator;
 import logger.Logger;
+import models.Appointment;
+import models.Group;
 import models.Person;
 
 import java.util.ArrayList;
@@ -35,6 +38,20 @@ public class Application {
 
             res.type("application/json");
             return "{}";
+        });
+
+        get("/:userId/appointments", (req, res) -> {
+            Person person = new Person();
+            person.read(Integer.parseInt(req.params("userId")));
+            ArrayList<Appointment> appointments = person.getAllAppointments();
+            return JSONTranslator.toJSONAppointments(appointments);
+        });
+
+        get("/:userId/groups", (req, res) -> {
+            Person person = new Person();
+            person.read(Integer.parseInt(req.params("userId")));
+            ArrayList<Group> groups = person.getAllGroups();
+            return JSONTranslator.toJSONGroups(groups);
         });
 
         get("/api/v1/user", (req, res) -> {
