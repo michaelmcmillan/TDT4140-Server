@@ -99,7 +99,9 @@ public class Person implements Model{
 
 
     @Override
-    public void delete(){}
+    public void delete(){
+        personsServlet.delete(id);
+    }
 
     //*************************************************************
 

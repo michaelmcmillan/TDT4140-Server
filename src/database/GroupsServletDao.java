@@ -29,7 +29,7 @@ public class GroupsServletDao<T extends Group> implements DbService {
             preppedStatement.setString( 1, group.getName());
             preppedStatement.setInt(    2, group.getCalendarId());
             preppedStatement.setInt(    3, group.getSuperGroupId());
-            preppedStatement.executeQuery();
+            preppedStatement.execute();
         } catch (SQLException error) {
             Logger.console(error.getMessage());
         }
@@ -88,12 +88,36 @@ public class GroupsServletDao<T extends Group> implements DbService {
     }
 
     @Override
-    public boolean update(Object newObject) {
-        return false;
+    public boolean update(Object object) {
+        Group group = (Group) object;
+
+        String insert =
+                "UPDATE Gruppe " +
+                        "SET name=?, Group_id=? " +
+                        "WHERE id=" + group.getId();
+        try {
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(insert);
+            preppedStatement.setString( 1, group.getName());
+            preppedStatement.setInt(    2, group.getSuperGroupId());
+            preppedStatement.executeUpdate();
+        } catch (SQLException error) {
+            Logger.console(error.getMessage());
+        }
+
+        return true;
     }
 
     @Override
     public boolean delete(int id) {
+        String delete = "DELETE FROM Gruppe WHERE id=" + id;
+        try{
+            PreparedStatement preparedStatement = database.getConn().prepareStatement(delete);
+            preparedStatement.execute();
+            return true;
+        }catch (SQLException error){
+            Logger.console(error.getMessage());
+        }
         return false;
     }
 }
