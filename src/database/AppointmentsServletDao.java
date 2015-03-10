@@ -1,13 +1,12 @@
 package database;
 
+import logger.Logger;
 import models.Appointment;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.io.Console;
+import java.sql.*;
 import java.util.ArrayList;
 
 
@@ -16,74 +15,60 @@ import java.util.ArrayList;
  */
 public class AppointmentsServletDao<T extends Appointment> implements DbService {
 
-    private Connection conn;
-    private Statement stmt;
-    private String uri;
-    private static String   user = "fellesprosjekt",
-            password = "zK8!iQ9!",
-            dbName = "fellesprosjekt";
+    DatabaseConnection database = new DatabaseConnection();
 
-    public  AppointmentsServletDao(){
-        uri = "jdbc:mysql://littlist.no:3306/" + dbName;
-    }
 
     @Override
     public boolean create(Object entity) {
         Appointment appointment = (Appointment)entity;
+        String insert = "INSERT INTO Appointment (tittel, description, start_time, end_time, Room_id, Person_id) " +
+                            "(?, ?, ?, ?, ?, ?)";
+
         try {
-            conn = DriverManager.getConnection(uri, user, password);
-            stmt = conn.createStatement();
-
-            String values = "('";
-            values += appointment.getTittel() + "','";
-            values += appointment.getDescription() + "','";
-            values += appointment.getStartTime() + "','";
-            values += appointment.getEndTime() + "',";
-            if (appointment.getRoomId() != 0){
-                values += appointment.getRoomId() + ",";
-            }
-            values += appointment.getPersonId() + ");";
-
-            System.out.println("insert into Appointment (tittel, description, start_time, end_time, Room_id, Person_id) values " + values);
-
-            if (appointment.getRoomId() != 0){
-                stmt.execute("insert into Appointment (tittel, description, start_time, end_time, Room_id, Person_id) values " + values);
-            }else
-                stmt.execute("insert into Appointment (tittel, description, start_time, end_time, Person_id) values " + values);
-
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(insert);
+            preppedStatement.setString(1, appointment.getTittel());
+            preppedStatement.setString(2, appointment.getDescription());
+            preppedStatement.setString(3, appointment.getStartTime());
+            preppedStatement.setString(4, appointment.getEndTime());
+            preppedStatement.setInt(5, appointment.getRoomId());
+            preppedStatement.setInt(6, appointment.getPersonId());
+            preppedStatement.executeQuery();
             return true;
 
 
-        }catch (Exception e){
-            System.out.println("Database error: " + e.getMessage());
+        }catch (SQLException error){
+            Logger.console(error.getMessage());
         }
         return false;
     }
 
     @Override
     public Object readOne(int id) {
+        String select = "SELECT * FROM Appointment WHERE id=" + id;
+
         try{
 
-            conn = DriverManager.getConnection(uri, user, password);
-            stmt = conn.createStatement();
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(select);
+            ResultSet rows = preppedStatement.executeQuery();
 
-            ResultSet resultSet = stmt.executeQuery("select * from Appointment where id=" + id);
-            while (resultSet.next()){
+            while (rows.next()){
                 Appointment appointment = new Appointment();
 
-                appointment.setId(resultSet.getInt("id"));
-                appointment.setTittel(resultSet.getString("tittel"));
-                appointment.setDescription(resultSet.getString("description"));
-                appointment.setStartTime(resultSet.getString("start_time"));
-                appointment.setEndTime(resultSet.getString("end_time"));
-                appointment.setRoomId(resultSet.getInt("Room_id"));
-                appointment.setPersonId(resultSet.getInt("Person_id"));
+                appointment.setId(rows.getInt("id"));
+                appointment.setTittel(rows.getString("tittel"));
+                appointment.setDescription(rows.getString("description"));
+                appointment.setStartTime(rows.getString("start_time"));
+                appointment.setEndTime(rows.getString("end_time"));
+                appointment.setRoomId(rows.getInt("Room_id"));
+                appointment.setPersonId(rows.getInt("Person_id"));
 
                 return appointment;
             }
 
-        }catch (Exception e){
-            System.out.println("Database error: " + e.getMessage());
+        }catch (SQLException error){
+            Logger.console(error.getMessage());
         }
         return null;
     }
