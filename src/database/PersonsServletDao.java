@@ -58,7 +58,7 @@ public class PersonsServletDao<T extends Person> implements DbService{
                 "SELECT id, name, Calendar_id, Person_has_Gruppe.Gruppe_id " +
                         "FROM Person_has_Gruppe " +
                         "JOIN Gruppe ON Person_has_Gruppe.Gruppe_id = id " +
-                        "WHERE Person_id.Person_id = ?";
+                        "WHERE Person_id = ?";
         try {
 
             PreparedStatement preppedStatement = null;
