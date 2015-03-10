@@ -81,6 +81,14 @@ public class AppointmentsServletDao<T extends Appointment> implements DbService 
 
     @Override
     public boolean delete(int id) {
+        String delete = "DELETE FROM Appointment WHERE id=" + id;
+        try{
+            PreparedStatement preparedStatement = database.getConn().prepareStatement(delete);
+            preparedStatement.execute();
+            return true;
+        }catch (SQLException error){
+            Logger.console(error.getMessage());
+        }
         return false;
     }
 }
