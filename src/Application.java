@@ -1,7 +1,6 @@
 import authentication.Authentication;
 import authentication.AuthenticationException;
 import database.DatabaseConnection;
-import database.ModelTest;
 import email.Email;
 import logger.Logger;
 import models.Person;
@@ -35,7 +34,7 @@ public class Application {
             ArrayList<Person> folks = Person.getAll();
 
             res.type("application/json");
-            return folks.get(0).toJSON();
+            return "{}";
         });
 
         get("/api/v1/user", (req, res) -> {
