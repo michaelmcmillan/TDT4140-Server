@@ -33,7 +33,7 @@ public class Application {
 //            }
 //
 //        });
-        
+
         get("/appointment/:appointmentId", (req, res) ->{
             Appointment appointment = new Appointment();
             appointment.read(Integer.parseInt(req.params("appointmentId")));
