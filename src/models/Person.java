@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Person implements Model{
 
@@ -101,6 +102,11 @@ public class Person implements Model{
     @Override
     public void delete(){
         personsServlet.delete(id);
+    }
+
+    @Override
+    public HashMap<String, Object> toHashMap() {
+        return null;
     }
 
     //*************************************************************

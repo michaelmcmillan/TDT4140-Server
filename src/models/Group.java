@@ -5,6 +5,8 @@ import database.GroupsServletDao;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 public class Group implements Model{
 
     private GroupsServletDao groupServlet;
@@ -53,6 +55,10 @@ public class Group implements Model{
         groupServlet.delete(id);
     }
 
+    @Override
+    public HashMap<String, Object> toHashMap() {
+        return null;
+    }
 
     public int getId() {
         return id;

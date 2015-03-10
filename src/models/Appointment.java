@@ -5,6 +5,8 @@ import database.AppointmentsServletDao;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 public class Appointment implements Model {
 
     AppointmentsServletDao appServlet;
@@ -48,6 +50,19 @@ public class Appointment implements Model {
     @Override
     public void delete() {
         appServlet.delete(id);
+    }
+
+    @Override
+    public HashMap<String, Object> toHashMap() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("tittel", tittel);
+        map.put("description", description);
+        map.put("start_time", startTime);
+        map.put("end_time", endTime);
+        map.put("Room_id", roomId);
+        map.put("Person_id", personId);
+        return map;
     }
 
     public AppointmentsServletDao getAppServlet() {

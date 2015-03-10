@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by sharklaks on 04/03/15.
@@ -57,6 +58,10 @@ public class Calendar implements Model{
         calendarServlet.delete(id);
     }
 
+    @Override
+    public HashMap<String, Object> toHashMap() {
+        return null;
+    }
 
     public int getId() {
         return id;
