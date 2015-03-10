@@ -75,8 +75,29 @@ public class AppointmentsServletDao<T extends Appointment> implements DbService 
     }
 
     @Override
-    public boolean update(Object newObject) {
-        return false;
+    public boolean update(Object object) {
+        Appointment appointment = (Appointment) object;
+
+        String update =
+                "UPDATE Person " +
+                        "SET tittel=?, description=?, start_time=?, end_time=?, Room_id=?, Person_id=? " +
+                        "WHERE id=" + appointment.getId();
+        try {
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(update);
+            preppedStatement.setString(1, appointment.getTittel());
+            preppedStatement.setString(2, appointment.getDescription());
+            preppedStatement.setString(3, appointment.getStartTime());
+            preppedStatement.setString(4, appointment.getEndTime());
+            preppedStatement.setInt(5, appointment.getRoomId());
+            preppedStatement.setInt(6, appointment.getPersonId());
+            preppedStatement.executeUpdate();
+        } catch (SQLException error) {
+            Logger.console(error.getMessage());
+        }
+
+        return true;
+
     }
 
     @Override
