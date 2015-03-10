@@ -60,7 +60,9 @@ public class Calendar implements Model{
 
     @Override
     public HashMap<String, Object> toHashMap() {
-        return null;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        return map;
     }
 
     public int getId() {

@@ -57,7 +57,12 @@ public class Group implements Model{
 
     @Override
     public HashMap<String, Object> toHashMap() {
-        return null;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("name", name);
+        map.put("Calendar_id", calendarId);
+        map.put("Group_id", superGroupId);
+        return map;
     }
 
     public int getId() {

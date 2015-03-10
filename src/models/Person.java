@@ -106,7 +106,15 @@ public class Person implements Model{
 
     @Override
     public HashMap<String, Object> toHashMap() {
-        return null;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("firsname", firstName);
+        map.put("surname", surName);
+        map.put("email", email);
+        map.put("password", password);
+        map.put("alarm_time", alarmTime);
+        map.put("Calendar_id", calendarId);
+        return map;
     }
 
     //*************************************************************
