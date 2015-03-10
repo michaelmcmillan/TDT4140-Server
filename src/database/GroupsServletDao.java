@@ -43,7 +43,7 @@ public class GroupsServletDao<T extends Group> implements DbService {
 
     @Override
     public Object readOne(int id) {
-        String select = "SELECT * FROM Person WHERE id=" + id;
+        String select = "SELECT * FROM Gruppe WHERE id=" + id;
         try{
             PreparedStatement preppedStatement = null;
             preppedStatement = database.getConn().prepareStatement(select);
