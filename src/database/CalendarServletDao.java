@@ -45,24 +45,9 @@ public class CalendarServletDao<T extends Calendar> implements DbService {
     @Override
     public boolean create(Object entity) {
         Calendar calendar = (Calendar)entity;
-        String insert = "INSERT INTO Calendar VALUES ()";
-
-        try {
-            PreparedStatement preppedStatement = null;
-            preppedStatement = database.getConn().prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
-            preppedStatement.execute();
-            ResultSet rows = preppedStatement.getGeneratedKeys();
-            if (rows.next()){
-                calendar.setId(rows.getInt(1));
-            }
-
-//            while (pre)
-//            calendar.setId(preppedStatement.getGeneratedKeys().getInt("id"));
-            return  true;
-        }catch (Exception error){
-            Logger.console(error.getMessage());
-        }
-        return false;
+        int id = ServletHelper.create("Calendar", calendar.toHashMap());
+        calendar.setId(id);
+        return id > 0;
     }
 
     @Override
@@ -82,14 +67,6 @@ public class CalendarServletDao<T extends Calendar> implements DbService {
 
     @Override
     public boolean delete(int id) {
-        String delete = "DELETE FROM Calendar WHERE id=" + id;
-        try{
-            PreparedStatement preparedStatement = database.getConn().prepareStatement(delete);
-            preparedStatement.execute();
-            return true;
-        }catch (SQLException error){
-            Logger.console(error.getMessage());
-        }
-        return false;
+        return ServletHelper.delete("Calendar", id);
     }
 }

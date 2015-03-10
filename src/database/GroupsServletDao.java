@@ -20,21 +20,7 @@ public class GroupsServletDao<T extends Group> implements DbService {
     public boolean create(Object entity) {
         Group group = (Group) entity;
 
-        String insert =
-                "INSERT INTO Gruppe (name, Calendar_id, Group_id) " +
-                        "(?, ?, ?)";
-        try {
-            PreparedStatement preppedStatement = null;
-            preppedStatement = database.getConn().prepareStatement(insert);
-            preppedStatement.setString( 1, group.getName());
-            preppedStatement.setInt(    2, group.getCalendarId());
-            preppedStatement.setInt(    3, group.getSuperGroupId());
-            preppedStatement.execute();
-        } catch (SQLException error) {
-            Logger.console(error.getMessage());
-        }
-
-        return true;
+        return ServletHelper.create("Gruppe", group.toHashMap()) > 0;
     }
 
     @Override
@@ -91,33 +77,11 @@ public class GroupsServletDao<T extends Group> implements DbService {
     public boolean update(Object object) {
         Group group = (Group) object;
 
-        String insert =
-                "UPDATE Gruppe " +
-                        "SET name=?, Group_id=? " +
-                        "WHERE id=" + group.getId();
-        try {
-            PreparedStatement preppedStatement = null;
-            preppedStatement = database.getConn().prepareStatement(insert);
-            preppedStatement.setString( 1, group.getName());
-            preppedStatement.setInt(    2, group.getSuperGroupId());
-            preppedStatement.executeUpdate();
-        } catch (SQLException error) {
-            Logger.console(error.getMessage());
-        }
-
-        return true;
+        return ServletHelper.update("Gruppe", group.toHashMap());
     }
 
     @Override
     public boolean delete(int id) {
-        String delete = "DELETE FROM Gruppe WHERE id=" + id;
-        try{
-            PreparedStatement preparedStatement = database.getConn().prepareStatement(delete);
-            preparedStatement.execute();
-            return true;
-        }catch (SQLException error){
-            Logger.console(error.getMessage());
-        }
-        return false;
+        return ServletHelper.delete("Gruppe", id);
     }
 }

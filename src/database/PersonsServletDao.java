@@ -88,26 +88,7 @@ public class PersonsServletDao<T extends Person> implements DbService{
     public boolean create (Object entity) {
         Person person = (Person) entity;
 
-        String insert =
-                "INSERT INTO Person (email, firstname, surname, password, alarm_time, Calendar_id) VALUES" +
-                "(?, ?, ?, ?, ?, ?)";
-        try {
-            PreparedStatement preppedStatement = null;
-            preppedStatement = database.getConn().prepareStatement(insert);
-            preppedStatement.setString(1, person.getEmail());
-            preppedStatement.setString(2, person.getFirstName());
-            preppedStatement.setString(3, person.getSurname());
-            preppedStatement.setString(4, person.getPassword());
-            preppedStatement.setInt(   5, person.getAlarmTime());
-            preppedStatement.setInt(   6, person.getCalendarId());
-
-            preppedStatement.execute();
-
-        } catch (SQLException error) {
-            Logger.console(error.getMessage());
-        }
-
-        return true;
+        return ServletHelper.create("Person", person.toHashMap()) > 0;
     }
 
     @Override
@@ -178,37 +159,12 @@ public class PersonsServletDao<T extends Person> implements DbService{
     public boolean update(Object object) {
         Person person = (Person) object;
 
-        String insert =
-                "UPDATE Person " +
-                        "SET email=?, firstname=?,  surname=?, password=?, alarm_time=? " +
-                        "WHERE id=" + person.getId();
-        try {
-            PreparedStatement preppedStatement = null;
-            preppedStatement = database.getConn().prepareStatement(insert);
-            preppedStatement.setString(1, person.getEmail());
-            preppedStatement.setString(2, person.getFirstName());
-            preppedStatement.setString(3, person.getSurname());
-            preppedStatement.setString(4, person.getPassword());
-            preppedStatement.setInt(   5, person.getAlarmTime());
-            preppedStatement.executeUpdate();
-        } catch (SQLException error) {
-            Logger.console(error.getMessage());
-        }
-
-        return true;
+        return ServletHelper.update("Person", person.toHashMap());
     }
 
     @Override
     public boolean delete(int id) {
-        String delete = "DELETE FROM Person WHERE id=" + id;
-        try{
-            PreparedStatement preparedStatement = database.getConn().prepareStatement(delete);
-            preparedStatement.execute();
-            return true;
-        }catch (SQLException error){
-            Logger.console(error.getMessage());
-        }
-        return false;
+        return ServletHelper.delete("Person", id);
     }
 
 }

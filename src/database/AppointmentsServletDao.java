@@ -17,26 +17,7 @@ public class AppointmentsServletDao<T extends Appointment> implements DbService 
     @Override
     public boolean create(Object entity) {
         Appointment appointment = (Appointment)entity;
-        String insert = "INSERT INTO Appointment (tittel, description, start_time, end_time, Room_id, Person_id) " +
-                            "(?, ?, ?, ?, ?, ?)";
-
-        try {
-            PreparedStatement preppedStatement = null;
-            preppedStatement = database.getConn().prepareStatement(insert);
-            preppedStatement.setString(1, appointment.getTittel());
-            preppedStatement.setString(2, appointment.getDescription());
-            preppedStatement.setString(3, appointment.getStartTime());
-            preppedStatement.setString(4, appointment.getEndTime());
-            preppedStatement.setInt(5, appointment.getRoomId());
-            preppedStatement.setInt(6, appointment.getPersonId());
-            preppedStatement.executeQuery();
-            return true;
-
-
-        }catch (SQLException error){
-            Logger.console(error.getMessage());
-        }
-        return false;
+        return ServletHelper.create("Appointment", appointment.toHashMap()) > 0;
     }
 
     @Override
@@ -78,38 +59,12 @@ public class AppointmentsServletDao<T extends Appointment> implements DbService 
     public boolean update(Object object) {
         Appointment appointment = (Appointment) object;
 
-        String update =
-                "UPDATE Person " +
-                        "SET tittel=?, description=?, start_time=?, end_time=?, Room_id=?, Person_id=? " +
-                        "WHERE id=" + appointment.getId();
-        try {
-            PreparedStatement preppedStatement = null;
-            preppedStatement = database.getConn().prepareStatement(update);
-            preppedStatement.setString(1, appointment.getTittel());
-            preppedStatement.setString(2, appointment.getDescription());
-            preppedStatement.setString(3, appointment.getStartTime());
-            preppedStatement.setString(4, appointment.getEndTime());
-            preppedStatement.setInt(5, appointment.getRoomId());
-            preppedStatement.setInt(6, appointment.getPersonId());
-            preppedStatement.executeUpdate();
-        } catch (SQLException error) {
-            Logger.console(error.getMessage());
-        }
-
-        return true;
+        return ServletHelper.update("Appointment", appointment.toHashMap());
 
     }
 
     @Override
     public boolean delete(int id) {
-        String delete = "DELETE FROM Appointment WHERE id=" + id;
-        try{
-            PreparedStatement preparedStatement = database.getConn().prepareStatement(delete);
-            preparedStatement.execute();
-            return true;
-        }catch (SQLException error){
-            Logger.console(error.getMessage());
-        }
-        return false;
+        return ServletHelper.delete("Appointment", id);
     }
 }
