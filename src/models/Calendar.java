@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class Calendar implements Model{
 
-    private CalendarServletDao servlet;
+    private CalendarServletDao calendarServlet;
 
     private ArrayList<Appointment> appointments;
 
@@ -21,7 +21,7 @@ public class Calendar implements Model{
     //*********THATS IT***********
 
     public Calendar (){
-        servlet = new CalendarServletDao();
+        calendarServlet = new CalendarServletDao();
     }
 
     private void fetchAppointments(){
@@ -29,7 +29,7 @@ public class Calendar implements Model{
     }
 
     public ArrayList<Appointment> getAllAppointments(){
-        return servlet.readAllAppointments(id);
+        return calendarServlet.readAllAppointments(id);
     }
 
 
@@ -39,7 +39,7 @@ public class Calendar implements Model{
 
     @Override
     public void create(){
-        servlet.create(this);
+        calendarServlet.create(this);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class Calendar implements Model{
 
     @Override
     public void delete() {
-
+        calendarServlet.delete(id);
     }
 
 

@@ -58,7 +58,7 @@ public class PersonsServletDao<T extends Person> implements DbService{
                 "SELECT id, name, Calendar_id, Person_has_Gruppe.Gruppe_id " +
                         "FROM Person_has_Gruppe " +
                         "JOIN Gruppe ON Person_has_Gruppe.Gruppe_id = id " +
-                        "WHERE Person_id.Person_id = ?";
+                        "WHERE Person_id = ?";
         try {
 
             PreparedStatement preppedStatement = null;
@@ -175,12 +175,39 @@ public class PersonsServletDao<T extends Person> implements DbService{
     }
 
     @Override
-    public boolean update(Object newObject) {
-        return false;
+    public boolean update(Object object) {
+        Person person = (Person) object;
+
+        String insert =
+                "UPDATE Person " +
+                        "SET email=?, firstname=?,  surname=?, password=?, alarm_time=? " +
+                        "WHERE id=" + person.getId();
+        try {
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(insert);
+            preppedStatement.setString(1, person.getEmail());
+            preppedStatement.setString(2, person.getFirstName());
+            preppedStatement.setString(3, person.getSurname());
+            preppedStatement.setString(4, person.getPassword());
+            preppedStatement.setInt(   5, person.getAlarmTime());
+            preppedStatement.executeUpdate();
+        } catch (SQLException error) {
+            Logger.console(error.getMessage());
+        }
+
+        return true;
     }
 
     @Override
     public boolean delete(int id) {
+        String delete = "DELETE FROM Person WHERE id=" + id;
+        try{
+            PreparedStatement preparedStatement = database.getConn().prepareStatement(delete);
+            preparedStatement.execute();
+            return true;
+        }catch (SQLException error){
+            Logger.console(error.getMessage());
+        }
         return false;
     }
 

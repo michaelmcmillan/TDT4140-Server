@@ -10,6 +10,6 @@ public interface DbService<T> {
     public boolean create(T entity);
     public T readOne (int id);
     public ArrayList<T> readAll();
-    public boolean update(T newObject);
+    public boolean update(T object);
     public boolean delete(int id);
 }

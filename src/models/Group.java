@@ -50,7 +50,7 @@ public class Group implements Model{
 
     @Override
     public void delete() {
-
+        groupServlet.delete(id);
     }
 
 

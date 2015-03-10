@@ -47,7 +47,7 @@ public class Appointment implements Model {
 
     @Override
     public void delete() {
-
+        appServlet.delete(id);
     }
 
     public AppointmentsServletDao getAppServlet() {
