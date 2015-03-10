@@ -117,7 +117,7 @@ public class PersonsServletDao<T extends Person> implements DbService{
 
     @Override
     public Object readOne(int id) {
-        String select = "SELECT * FROM Person WHERE id=" + 1;
+        String select = "SELECT * FROM Person WHERE id=" + id;
 
         try {
 

@@ -1,13 +1,11 @@
 package database;
 
+import logger.Logger;
 import models.Group;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -15,66 +13,49 @@ import java.util.ArrayList;
  */
 public class GroupsServletDao<T extends Group> implements DbService {
 
-    private Connection conn;
-    private Statement stmt;
-    private String uri;
-    private static String   user = "fellesprosjekt",
-            password = "zK8!iQ9!",
-            dbName = "fellesprosjekt";
+    DatabaseConnection database = new DatabaseConnection();
 
     public  GroupsServletDao(){
-        uri = "jdbc:mysql://littlist.no:3306/" + dbName;
+
     }
 
     @Override
     public boolean create(Object entity) {
-        Group group = (Group)entity;
+        Group group = (Group) entity;
+
+        String insert =
+                "INSERT INTO Gruppe (name, Calendar_id, Group_id) " +
+                        "(?, ?, ?)";
         try {
-            conn = DriverManager.getConnection(uri, user, password);
-            stmt = conn.createStatement();
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(insert);
+            preppedStatement.setString( 1, group.getName());
+            preppedStatement.setInt(    2, group.getCalendarId());
+            preppedStatement.setInt(    3, group.getSuperGroupId());
+            preppedStatement.executeQuery();
 
-            String values = "('";
-            values += group.getName() + "',";
-            values += group.getCalendarId();
-            if (group.getSuperGroupId() > -1){
-                values += ",'" + group.getSuperGroupId() + "')";
-                stmt.execute("insert into Gruppe (name, Calendar_id, Group_id) values " + values);
-                System.out.println("insert into Group (name, Calendar_id, Group_id) values " + values);
-            }
-            else {
-                values += ")";
-                System.out.println("insert into 'Group' (name, Calendar_id) values " + values);
-
-                stmt.execute("insert into Gruppe (name, Calendar_id) values " + values);
-
-            }
-
-            return true;
-
-        }catch (Exception e){
-            System.out.println("Database error: " + e.getMessage());
+        } catch (SQLException error) {
+            Logger.console(error.getMessage());
         }
-        return false;
+
+        return true;
     }
 
     @Override
     public Object readOne(int id) {
+        String select = "SELECT * FROM Person WHERE id=" + id;
         try{
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(select);
+            ResultSet rows = preppedStatement.executeQuery();
 
-            conn = DriverManager.getConnection(uri, user, password);
-            stmt = conn.createStatement();
-
-            ResultSet resultSet = stmt.executeQuery("select * from Gruppe where id=" + id);
-            while (resultSet.next()){
+            while (rows.next()){
                 Group group = new Group();
 
-                group.setId(resultSet.getInt("id"));
-                group.setName(resultSet.getString("name"));
-                group.setCalendarId(resultSet.getInt("Calendar_id"));
-                if (resultSet.getInt("Gruppe_id") != 0)
-                    group.setSuperGroupId(resultSet.getInt("Gruppe_id"));
-
-
+                group.setId(rows.getInt("id"));
+                group.setName(rows.getString("name"));
+                group.setCalendarId(rows.getInt("Calendar_id"));
+                group.setSuperGroupId(rows.getInt("Gruppe_id"));
                 return group;
             }
 
@@ -86,7 +67,28 @@ public class GroupsServletDao<T extends Group> implements DbService {
 
     @Override
     public ArrayList readAll() {
-        return null;
+        ArrayList<Group> groups = new ArrayList<>();
+        String select = "SELECT * FROM Person";
+
+        try{
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(select);
+            ResultSet rows = preppedStatement.executeQuery();
+
+            while (rows.next()) {
+                Group group = new Group();
+
+                group.setId(rows.getInt("id"));
+                group.setName(rows.getString("name"));
+                group.setCalendarId(rows.getInt("Calendar_id"));
+                group.setSuperGroupId(rows.getInt("Gruppe_id"));
+                groups.add(group);
+            }
+
+        }catch (Exception e){
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return groups;
     }
 
     @Override
