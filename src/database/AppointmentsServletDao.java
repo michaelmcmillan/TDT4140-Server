@@ -2,10 +2,6 @@ package database;
 
 import logger.Logger;
 import models.Appointment;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.Console;
 import java.sql.*;
 import java.util.ArrayList;
 

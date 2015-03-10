@@ -3,7 +3,6 @@ package database;
 import logger.Logger;
 import models.Appointment;
 import models.Calendar;
-import models.Group;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -4,11 +4,6 @@ import logger.Logger;
 import models.Appointment;
 import models.Group;
 import models.Person;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import javax.xml.crypto.Data;
-import java.lang.reflect.Array;
 import java.sql.*;
 import java.util.ArrayList;
 

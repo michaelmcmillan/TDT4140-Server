@@ -2,9 +2,6 @@ package database;
 
 import logger.Logger;
 import models.Group;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.sql.*;
 import java.util.ArrayList;
 
