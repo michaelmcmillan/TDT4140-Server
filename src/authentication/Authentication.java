@@ -3,19 +3,18 @@ package authentication;
 import models.Person;
 import logger.Logger;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Base64;
 
 public class Authentication {
 
-    private HashMap<String, String> users = new HashMap<String, String>();
+    private ArrayList<Person> users = new ArrayList<Person>();
     private final String authHeader;
 
     public Authentication (String authHeader) {
         this.authHeader = authHeader;
-        for (Person person: Person.getAll()) {
-            users.put(person.getEmail(), person.getPassword());
-        }
+        users = Person.getAll();
     }
 
     public String[] parseCredentials () {
@@ -42,20 +41,17 @@ public class Authentication {
         return authHeaderToBeDecoded.split(":");
     }
 
-    public boolean checkCredentials () {
+    public int checkCredentials () {
 
         // Get the username and password
         String username = parseCredentials()[0];
         String password = parseCredentials()[1];
 
         // Check if the username exists
-        if (!users.containsKey(username))
-            throw new AuthenticationException("Finnes ingen bruker med det brukernavnet.");
+        for (Person user : users)
+            if (user.getEmail().equals(username) && user.getPassword().equals(password))
+                return user.getId();
 
-        // Check if the password provided is valid
-        if (!users.get(username).equals(password))
-            throw new AuthenticationException("Feil passord oppgitt.");
-
-        return true;
+        throw new AuthenticationException("Finnes ingen bruker med det brukernavnet og passordet.");
     }
 }
