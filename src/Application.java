@@ -34,11 +34,11 @@ public class Application {
         });
 
         after((req, res) -> {
+            res.raw().setHeader("User", null);
             res.type("application/json");
         });
 
         get("/user/me", (req, res) -> {
-            req.headers("Authorization");
             return "{\"success\": true}";
         });
 
@@ -55,13 +55,6 @@ public class Application {
             return JSONTranslator.toJSON(group);
         });
 
-        /*get("/user/:userId", (req, res) -> {
-            Person person = new Person();
-            person.read(Integer.parseInt(req.params("userId")));
-            return JSONTranslator.toJSON(person);
-        });
-        */
-
         get("/user/appointments", (req, res) -> {
             int userId = Integer.parseInt(res.raw().getHeader("User"));
 
@@ -72,9 +65,11 @@ public class Application {
             return JSONTranslator.toJSONAppointments(appointments);
         });
 
-        get("/user/:userId/groups", (req, res) -> {
+        get("/user/groups", (req, res) -> {
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+
             Person person = new Person();
-            person.read(Integer.parseInt(req.params("userId")));
+            person.read(userId);
             ArrayList<Group> groups = person.getAllGroups();
             return JSONTranslator.toJSONGroups(groups);
         });
@@ -84,15 +79,6 @@ public class Application {
             calendar.setId(Integer.parseInt(req.params("calendarId")));
             ArrayList<Appointment> appointments = calendar.getAllAppointments();
             return JSONTranslator.toJSONAppointments(appointments);
-        });
-
-        get("/api/v1/user", (req, res) -> {
-            System.out.println("hehe");
-            return "{}";
-        });
-
-        get("/api/v1/user/appointments", (req, res) -> {
-            return "{}";
         });
     }
 }
