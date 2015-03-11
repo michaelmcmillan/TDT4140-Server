@@ -18,32 +18,32 @@ public class Application {
     public static void main(String[] args) {
 
         //setIpAddress("78.91.74.53");
-        setPort(1338);
+        setPort(1337);
 
         before((request, response) -> {
 
             String authHeader = request.headers("Authorization");
-            Logger.console(authHeader);
             Authentication authentication = new Authentication(authHeader);
 
             try {
-                authentication.checkCredentials();
+                response.raw().setIntHeader("User", authentication.checkCredentials());
             } catch (AuthenticationException authError) {
                 Logger.console(authError.getMessage(), request.ip());
-                halt(401, "{\"message\": \"Du er ikke autentisert.\"");
+                halt(401, "{\"message\": \"Du er ikke autentisert.\"}");
             }
+        });
 
+        after((req, res) -> {
+            res.type("application/json");
         });
 
         get("/user/me", (req, res) -> {
-
             req.headers("Authorization");
-
-            res.type("application/json");
             return "{\"success\": true}";
         });
 
         get("/appointment/:appointmentId", (req, res) ->{
+
             Appointment appointment = new Appointment();
             appointment.read(Integer.parseInt(req.params("appointmentId")));
             return JSONTranslator.toJSON(appointment);
@@ -55,16 +55,20 @@ public class Application {
             return JSONTranslator.toJSON(group);
         });
 
-        get("/user/:userId", (req, res) -> {
+        /*get("/user/:userId", (req, res) -> {
             Person person = new Person();
             person.read(Integer.parseInt(req.params("userId")));
             return JSONTranslator.toJSON(person);
         });
+        */
 
-        get("/user/:userId/appointments", (req, res) -> {
+        get("/user/appointments", (req, res) -> {
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+
             Person person = new Person();
-            person.read(Integer.parseInt(req.params("userId")));
+            person.read(userId);
             ArrayList<Appointment> appointments = person.getAllAppointments();
+
             return JSONTranslator.toJSONAppointments(appointments);
         });
 
@@ -83,12 +87,11 @@ public class Application {
         });
 
         get("/api/v1/user", (req, res) -> {
-            res.type("application/json");
+            System.out.println("hehe");
             return "{}";
         });
 
         get("/api/v1/user/appointments", (req, res) -> {
-            res.type("application/json");
             return "{}";
         });
     }
