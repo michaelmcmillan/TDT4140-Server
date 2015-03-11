@@ -19,7 +19,7 @@ public class Authentication {
 
     public String[] parseCredentials () {
         String authHeaderToBeDecoded = "";
-        Logger.console(this.authHeader);
+
         // Check if the Authorization header is correctly formatted
         if (this.authHeader == null
         ||  this.authHeader.toLowerCase().startsWith("basic") == false
