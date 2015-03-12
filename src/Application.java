@@ -76,6 +76,31 @@ public class Application {
             return JSONTranslator.toJSONAppointments(appointmentsInterval);
         });
 
+        get("/calendar/:calendarId/appointments/:fromyyyyMMdd/:toyyyyMMdd", (req, res) ->{
+            int calendarId = Integer.parseInt(req.params(":calendarId"));
+
+            Calendar calendar = new Calendar();
+            calendar.setId(calendarId);
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+            Date fromDate = format.parse(req.params(":fromyyyyMMdd"));
+            Date toDate = format.parse(req.params(":toyyyyMMdd"));
+
+            ArrayList<Appointment> appointments = calendar.getAllAppointments();
+            ArrayList<Appointment> appointmentsInterval = new ArrayList<Appointment>();
+
+            for (Appointment appointment: appointments) {
+                Date appointmentStart = format.parse(appointment.getStartTime());
+                Date appointmentEnd   = format.parse(appointment.getEndTime());
+
+                if (appointmentStart.after(fromDate) && appointmentEnd.before(toDate))
+                    appointmentsInterval.add(appointment);
+            }
+
+            return JSONTranslator.toJSONAppointments(appointmentsInterval);
+        });
+
 
         get("/appointment/:", (req, res) ->{
 
