@@ -25,6 +25,15 @@ public class Group implements Model{
     }
 
 
+    public boolean addUser(int userId){
+        return groupServlet.addUser(id, userId);
+    }
+
+    public boolean removeUser(int userId){
+        return groupServlet.removeUser(id, userId);
+    }
+
+
     @Override
     public boolean create(){
         calendar = new Calendar();

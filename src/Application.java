@@ -171,5 +171,23 @@ public class Application {
             appointment.setId(Integer.parseInt(req.params("appointmentId")));
             return appointment.removeUser(userId);
         });
+
+        post("/group/:groupId/:userIdToAdd", (req, res) -> {
+            int userIdToAdd = Integer.parseInt(req.params("userIdToAdd"));
+
+            Group group = new Group();
+            group.setId(Integer.parseInt(req.params("groupId")));
+
+            return group.addUser(userIdToAdd);
+        });
+
+        delete("/group/:groupId/:userIdToRemove", (req, res) -> {
+            int userIdToRemove = Integer.parseInt(req.params("userIdToRemove"));
+
+            Group group = new Group();
+            group.setId(Integer.parseInt(req.params("groupId")));
+
+            return group.removeUser(userIdToRemove);
+        });
     }
 }
