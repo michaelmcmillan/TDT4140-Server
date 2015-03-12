@@ -1,20 +1,13 @@
 import authentication.Authentication;
 import authentication.AuthenticationException;
-import database.DatabaseConnection;
-import email.Email;
 import json.JSONTranslator;
 import logger.Logger;
 import models.Appointment;
 import models.Calendar;
 import models.Group;
 import models.Person;
-import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -167,6 +160,12 @@ public class Application {
             Appointment appointment = new Appointment();
             appointment.setId(Integer.parseInt(req.params("appointmentId")));
             return appointment.invite(Integer.parseInt(req.params("userId")));
+        });
+
+        delete("/appointment/:appointmentId/:userId", (req, res) -> {
+            Appointment appointment = new Appointment();
+            appointment.setId(Integer.parseInt(req.params("appointmentId")));
+            return appointment.removeUser(Integer.parseInt(req.params("userId")));
         });
     }
 }
