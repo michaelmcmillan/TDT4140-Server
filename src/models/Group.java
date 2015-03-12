@@ -26,11 +26,11 @@ public class Group implements Model{
 
 
     @Override
-    public void create(){
+    public boolean create(){
         calendar = new Calendar();
         calendar.create();
         calendarId = calendar.getId();
-        groupServlet.create(this);
+        return groupServlet.create(this);
     }
 
     @Override

@@ -39,8 +39,8 @@ public class Calendar implements Model{
     }
 
     @Override
-    public void create(){
-        calendarServlet.create(this);
+    public boolean create(){
+        return calendarServlet.create(this);
     }
 
     @Override

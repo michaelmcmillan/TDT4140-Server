@@ -72,12 +72,12 @@ public class Person implements Model{
 
     //*******************OVERRIDE METHODS****************************
     @Override
-    public void create(){
+    public boolean create(){
         personsServlet = new PersonsServletDao();
         calendar = new Calendar();
         calendar.create();
         calendarId = calendar.getId();
-        personsServlet.create(this);
+        return personsServlet.create(this);
     }
 
     @Override

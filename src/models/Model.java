@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public interface Model {
 
-    public void create();
+    public boolean create();
     public void read(int id);
     public void update();
     public void delete();

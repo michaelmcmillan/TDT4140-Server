@@ -26,8 +26,8 @@ public class Appointment implements Model {
     }
 
     @Override
-    public void create() {
-        appServlet.create(this);
+    public boolean create() {
+        return appServlet.create(this);
     }
 
     @Override
