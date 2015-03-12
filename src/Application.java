@@ -156,16 +156,20 @@ public class Application {
             return appointment.create(Integer.parseInt(req.params("calendarId")));
         });
 
-        post("/appointment/:appointmentId/:userId", (req, res) -> {
+        post("/appointment/:appointmentId", (req, res) -> {
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+
             Appointment appointment = new Appointment();
             appointment.setId(Integer.parseInt(req.params("appointmentId")));
-            return appointment.invite(Integer.parseInt(req.params("userId")));
+            return appointment.invite(userId);
         });
 
-        delete("/appointment/:appointmentId/:userId", (req, res) -> {
+        delete("/appointment/:appointmentId", (req, res) -> {
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+
             Appointment appointment = new Appointment();
             appointment.setId(Integer.parseInt(req.params("appointmentId")));
-            return appointment.removeUser(Integer.parseInt(req.params("userId")));
+            return appointment.removeUser(userId);
         });
     }
 }
