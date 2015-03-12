@@ -8,9 +8,15 @@ import models.Appointment;
 import models.Calendar;
 import models.Group;
 import models.Person;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static spark.Spark.*;
 
@@ -19,7 +25,7 @@ public class Application {
     public static void main(String[] args) {
 
         //setIpAddress("78.91.74.53");
-        setPort(1337);
+        setPort(1338);
 
         before((request, response) -> {
 
@@ -41,6 +47,38 @@ public class Application {
 
         get("/user/me", (req, res) -> {
             return "{\"success\": true}";
+        });
+
+        get("/user/appointments/:fromyyyyMMdd/:toyyyyMMdd", (req, res) -> {
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+            Person person = new Person();
+            person.read(userId);
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+            Date fromDate = format.parse(req.params(":fromyyyyMMdd"));
+            Date toDate = format.parse(req.params(":toyyyyMMdd"));
+
+            ArrayList<Appointment> appointments = person.getAllAppointments();
+            ArrayList<Appointment> appointmentsInterval = new ArrayList<Appointment>();
+
+            for (Appointment appointment: appointments) {
+                Date appointmentStart = format.parse(appointment.getStartTime());
+                Date appointmentEnd   = format.parse(appointment.getEndTime());
+
+                if (appointmentStart.after(fromDate) && appointmentEnd.before(toDate))
+                    appointmentsInterval.add(appointment);
+            }
+
+            return JSONTranslator.toJSONAppointments(appointmentsInterval);
+        });
+
+
+        get("/appointment/:", (req, res) ->{
+
+            Appointment appointment = new Appointment();
+            appointment.read(Integer.parseInt(req.params("appointmentId")));
+            return JSONTranslator.toJSON(appointment);
         });
 
         get("/appointment/:appointmentId", (req, res) ->{
