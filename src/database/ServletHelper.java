@@ -63,7 +63,7 @@ public class ServletHelper {
     }
 
     public static boolean delete(String table, int id){
-        DatabaseConnection database = new DatabaseConnection();
+        DatabaseConnection database = DatabaseConnection.getInstance();
         String delete = "DELETE FROM " +  table + " WHERE id=" + id;
         try{
             PreparedStatement preparedStatement = database.getConn().prepareStatement(delete);

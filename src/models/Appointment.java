@@ -40,6 +40,10 @@ public class Appointment implements Model {
         return appServlet.invite(id, userId);
     }
 
+    public boolean removeUser(int userId){
+        return appServlet.removeUser(id, userId);
+    }
+
     @Override
     public void read(int id) {
         Appointment appointment = (Appointment)appServlet.readOne(id);

@@ -38,6 +38,19 @@ public class AppointmentsServletDao<T extends Appointment> implements DbService 
         return ServletHelper.create("Person_has_Appointment", map) > 0;
     }
 
+    public boolean removeUser(int appointmentId, int userId){
+        DatabaseConnection database = DatabaseConnection.getInstance();
+        String delete = "DELETE FROM Person_has_Appointment WHERE Person_id=" + userId + " AND Appointment_id=" + appointmentId;
+        try{
+            PreparedStatement preparedStatement = database.getConn().prepareStatement(delete);
+            preparedStatement.execute();
+            return true;
+        }catch (SQLException error){
+            Logger.console(error.getMessage());
+        }
+        return false;
+    }
+
     @Override
     public Object readOne(int id) {
         String select = "SELECT * FROM Appointment WHERE id=" + id;
