@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class PersonsServletDao<T extends Person> implements DbService{
 
-    DatabaseConnection database = new DatabaseConnection();
+    DatabaseConnection database = DatabaseConnection.getInstance();
 
     public ArrayList<Appointment> readAllAppointments(int id){
 

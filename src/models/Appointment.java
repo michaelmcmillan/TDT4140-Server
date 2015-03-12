@@ -30,6 +30,12 @@ public class Appointment implements Model {
         return appServlet.create(this);
     }
 
+    public boolean create(int calendarId){
+        create();
+        appServlet.create(id, calendarId);
+        return true;
+    }
+
     @Override
     public void read(int id) {
         Appointment appointment = (Appointment)appServlet.readOne(id);

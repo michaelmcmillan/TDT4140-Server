@@ -2,6 +2,8 @@ package database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import logger.Logger;
+
+import javax.xml.crypto.Data;
 import java.sql.*;
 
 public class DatabaseConnection {
@@ -13,6 +15,7 @@ public class DatabaseConnection {
     private String username = "fellesprosjekt";
     private String password = "zK8!iQ9!";
     private String hostname = "jdbc:mysql://littlist.no:3306/" + database;
+    private static DatabaseConnection instance = null;
 
     public DatabaseConnection () {
 
@@ -32,6 +35,12 @@ public class DatabaseConnection {
                 }
             }
         }));
+    }
+    public static DatabaseConnection getInstance(){
+        if (instance == null)
+            instance = new DatabaseConnection();
+
+        return instance;
     }
 
     public Connection getConn () {

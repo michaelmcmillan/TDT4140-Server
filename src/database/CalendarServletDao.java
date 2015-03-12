@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class CalendarServletDao<T extends Calendar> implements DbService {
 
-    DatabaseConnection database = new DatabaseConnection();
+    DatabaseConnection database = DatabaseConnection.getInstance();
 
 
     public ArrayList<Appointment> readAllAppointments(int id) {

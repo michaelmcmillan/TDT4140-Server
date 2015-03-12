@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class GroupsServletDao<T extends Group> implements DbService {
 
-    DatabaseConnection database = new DatabaseConnection();
+    DatabaseConnection database = DatabaseConnection.getInstance();
 
     public  GroupsServletDao(){
 

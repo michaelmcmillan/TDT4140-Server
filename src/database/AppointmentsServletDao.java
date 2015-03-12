@@ -4,6 +4,7 @@ import logger.Logger;
 import models.Appointment;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -11,13 +12,22 @@ import java.util.ArrayList;
  */
 public class AppointmentsServletDao<T extends Appointment> implements DbService {
 
-    DatabaseConnection database = new DatabaseConnection();
+    DatabaseConnection database = DatabaseConnection.getInstance();
 
 
     @Override
     public boolean create(Object entity) {
         Appointment appointment = (Appointment)entity;
-        return ServletHelper.create("Appointment", appointment.toHashMap()) > 0;
+        appointment.setId(ServletHelper.create("Appointment", appointment.toHashMap()));
+        return appointment.getId() > 0;
+    }
+
+    public boolean create(int appointmentId, int calendarId){
+        HashMap<String, Object> map = new HashMap<>();
+
+        map.put("Appointment_id", appointmentId);
+        map.put("Calendar_id", calendarId);
+        return ServletHelper.create("Appointment_has_Calendar", map) > 0;
     }
 
     @Override
