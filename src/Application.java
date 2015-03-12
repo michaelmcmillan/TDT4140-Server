@@ -8,6 +8,7 @@ import models.Appointment;
 import models.Calendar;
 import models.Group;
 import models.Person;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -79,6 +80,14 @@ public class Application {
             calendar.setId(Integer.parseInt(req.params("calendarId")));
             ArrayList<Appointment> appointments = calendar.getAllAppointments();
             return JSONTranslator.toJSONAppointments(appointments);
+        });
+
+        post("/user", (req, res) -> {
+            Person newUser = JSONTranslator.toPerson(new JSONObject(req.body()));
+            if(newUser.create())
+                return "{ message: \"Success\"}";
+            return "{ message: \"fail\"}";
+
         });
     }
 }
