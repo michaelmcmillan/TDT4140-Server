@@ -51,13 +51,16 @@ public class JSONTranslator {
 
     public static Person toPerson(JSONObject jsonObject) throws JSONException{
         Person person = new Person();
-        person.setId(jsonObject.getInt("id"));
+        if (person.getId() > 0)
+            person.setId(jsonObject.getInt("id"));
         person.setEmail(jsonObject.getString("email"));
         person.setFirstName(jsonObject.getString("firstname"));
         person.setSurname(jsonObject.getString("surname"));
         person.setPassword(jsonObject.getString("password"));
         person.setAlarmTime(jsonObject.getInt("alarm_time"));
-        person.setCalendarId(jsonObject.getInt("Calendar_id"));
+
+        if (person.getCalendarId() > 0)
+            person.setCalendarId(jsonObject.getInt("Calendar_id"));
         return person;
     }
 
