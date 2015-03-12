@@ -46,7 +46,10 @@ public class Application {
         });
 
         get("/user/me", (req, res) -> {
-            return "{\"success\": true}";
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+            Person person = new Person();
+            person.read(userId);
+            return JSONTranslator.toJSON(person).toString();
         });
 
         get("/user/appointments/:fromyyyyMMdd/:toyyyyMMdd", (req, res) -> {
