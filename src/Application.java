@@ -87,7 +87,20 @@ public class Application {
             if(newUser.create())
                 return "{ message: \"Success\"}";
             return "{ message: \"fail\"}";
+        });
+
+        post("/appointment", (req, res) ->{
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+            Appointment appointment = JSONTranslator.toAppointment(new JSONObject(req.body()));
+            appointment.setPersonId(userId);
+            if (appointment.create())
+                return "{ message: \"Succes\"}";
+            return "{ message: \"fail\"}";
 
         });
+
+//        post("/appointment/:group_id", (req, res) ->{
+//
+//        });
     }
 }

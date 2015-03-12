@@ -66,13 +66,16 @@ public class JSONTranslator {
 
     public static Appointment toAppointment(JSONObject jsonObject) throws JSONException{
         Appointment appointment = new Appointment();
-        appointment.setId(jsonObject.getInt("id"));
+        if( appointment.getId() > 0)
+            appointment.setId(jsonObject.getInt("id"));
         appointment.setTittel(jsonObject.getString("tittel"));
         appointment.setDescription(jsonObject.getString("description"));
         appointment.setStartTime(jsonObject.getString("start_time"));
         appointment.setEndTime(jsonObject.getString("end_time"));
-        appointment.setRoomId(jsonObject.getInt("Room_id"));
-        appointment.setPersonId(jsonObject.getInt("Person_id"));
+        if (appointment.getRoomId() > 0)
+            appointment.setRoomId(jsonObject.getInt("Room_id"));
+        if (appointment.getPersonId() > 0)
+            appointment.setPersonId(jsonObject.getInt("Person_id"));
         return appointment;
     }
 

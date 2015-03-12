@@ -108,7 +108,7 @@ public class Person implements Model{
     public HashMap<String, Object> toHashMap() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", id);
-        map.put("firsname", firstName);
+        map.put("firstname", firstName);
         map.put("surname", surName);
         map.put("email", email);
         map.put("password", password);
