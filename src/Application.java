@@ -155,21 +155,18 @@ public class Application {
             return "{ message: \"fail\"}";
         });
 
-        post("/appointment", (req, res) ->{
-            int userId = Integer.parseInt(res.raw().getHeader("User"));
-            Appointment appointment = JSONTranslator.toAppointment(new JSONObject(req.body()));
-            appointment.setPersonId(userId);
-            if (appointment.create())
-                return "{ message: \"Succes\"}";
-            return "{ message: \"fail\"}";
-        });
-
         post("/appointment/:calendarId", (req, res) ->{
             int userId = Integer.parseInt(res.raw().getHeader("User"));
 
             Appointment appointment = JSONTranslator.toAppointment(new JSONObject(req.body()));
             appointment.setPersonId(userId);
             return appointment.create(Integer.parseInt(req.params("calendarId")));
+        });
+
+        post("/appointment/:appointmentId/:userId", (req, res) -> {
+            Appointment appointment = new Appointment();
+            appointment.setId(Integer.parseInt(req.params("appointmentId")));
+            return appointment.invite(Integer.parseInt(req.params("userId")));
         });
     }
 }

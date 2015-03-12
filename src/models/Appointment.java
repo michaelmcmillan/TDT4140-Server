@@ -36,6 +36,10 @@ public class Appointment implements Model {
         return true;
     }
 
+    public boolean invite(int userId){
+        return appServlet.invite(id, userId);
+    }
+
     @Override
     public void read(int id) {
         Appointment appointment = (Appointment)appServlet.readOne(id);

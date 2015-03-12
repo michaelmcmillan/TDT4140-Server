@@ -30,6 +30,14 @@ public class AppointmentsServletDao<T extends Appointment> implements DbService 
         return ServletHelper.create("Appointment_has_Calendar", map) > 0;
     }
 
+    public boolean invite(int appointmentId, int userId){
+        HashMap<String, Object> map = new HashMap<>();
+
+        map.put("Appointment_id", appointmentId);
+        map.put("Person_id", userId);
+        return ServletHelper.create("Person_has_Appointment", map) > 0;
+    }
+
     @Override
     public Object readOne(int id) {
         String select = "SELECT * FROM Appointment WHERE id=" + id;
