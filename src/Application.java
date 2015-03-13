@@ -148,8 +148,9 @@ public class Application {
             Group group = JSONTranslator.toGroup(new JSONObject(req.body()));
             group.setCalendarId(calendar.getId());
             group.create();
+            group.addUser(userId);
 
-            return group.addUser(userId);
+            return JSONTranslator.toJSON(group);
         });
 
         post("/appointment/:calendarId", (req, res) ->{
