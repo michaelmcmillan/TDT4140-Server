@@ -8,6 +8,8 @@ import models.Group;
 import models.Person;
 import org.json.JSONObject;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -75,31 +77,22 @@ public class Application {
             Calendar calendar = new Calendar();
             calendar.setId(calendarId);
 
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-            Date fromDate = format.parse(req.params(":fromyyyyMMdd"));
-            Date toDate = format.parse(req.params(":toyyyyMMdd"));
+            String fromDate = req.params(":fromyyyyMMdd");
+            String toDate = req.params(":toyyyyMMdd");
 
             ArrayList<Appointment> appointments = calendar.getAllAppointments();
             ArrayList<Appointment> appointmentsInterval = new ArrayList<Appointment>();
 
             for (Appointment appointment: appointments) {
-                Date appointmentStart = format.parse(appointment.getStartTime());
-                Date appointmentEnd   = format.parse(appointment.getEndTime());
 
-                if (appointmentStart.after(fromDate) && appointmentEnd.before(toDate))
+                String appointmentStart = appointment.getStartTime().split(" ")[0];
+                String appointmentEnd   = appointment.getEndTime().split(" ")[0];
+
+                if (appointmentStart.compareTo(fromDate) >= 0 && appointmentEnd.compareTo(toDate) <= 0)
                     appointmentsInterval.add(appointment);
             }
 
             return JSONTranslator.toJSONAppointments(appointmentsInterval);
-        });
-
-
-        get("/appointment/:", (req, res) ->{
-
-            Appointment appointment = new Appointment();
-            appointment.read(Integer.parseInt(req.params("appointmentId")));
-            return JSONTranslator.toJSON(appointment);
         });
 
         get("/appointment/:appointmentId", (req, res) ->{
