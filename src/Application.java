@@ -6,6 +6,7 @@ import models.Appointment;
 import models.Calendar;
 import models.Group;
 import models.Person;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -177,13 +178,16 @@ public class Application {
             return appointment.removeUser(userId);
         });
 
-        post("/group/:groupId/:userIdToAdd", (req, res) -> {
-            int userIdToAdd = Integer.parseInt(req.params("userIdToAdd"));
+        post("/group/:groupId/members", (req, res) -> {
+            ArrayList<Person> persons = JSONTranslator.toPersonArrayList(new JSONArray(req.body()));
 
             Group group = new Group();
             group.setId(Integer.parseInt(req.params("groupId")));
 
-            return group.addUser(userIdToAdd);
+            for (Person person : persons){
+                group.addUser(person.getId());
+            }
+            return JSONTranslator.toJSONPersons(persons);
         });
 
         delete("/group/:groupId/:userIdToRemove", (req, res) -> {
