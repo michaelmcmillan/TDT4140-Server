@@ -52,19 +52,17 @@ public class Application {
             Person person = new Person();
             person.read(userId);
 
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-            Date fromDate = format.parse(req.params(":fromyyyyMMdd"));
-            Date toDate = format.parse(req.params(":toyyyyMMdd"));
+            String fromDate = req.params(":fromyyyyMMdd");
+            String toDate = req.params(":toyyyyMMdd");
 
             ArrayList<Appointment> appointments = person.getAllAppointments();
             ArrayList<Appointment> appointmentsInterval = new ArrayList<Appointment>();
 
             for (Appointment appointment: appointments) {
-                Date appointmentStart = format.parse(appointment.getStartTime());
-                Date appointmentEnd   = format.parse(appointment.getEndTime());
+                String appointmentStart = appointment.getStartTime().split(" ")[0];
+                String appointmentEnd   = appointment.getEndTime().split(" ")[0];
 
-                if (appointmentStart.after(fromDate) && appointmentEnd.before(toDate))
+                if (appointmentStart.compareTo(fromDate) >= 0 && appointmentEnd.compareTo(toDate) <= 0)
                     appointmentsInterval.add(appointment);
             }
 
@@ -136,7 +134,7 @@ public class Application {
 
         post("/user", (req, res) -> {
             Person newUser = JSONTranslator.toPerson(new JSONObject(req.body()));
-            if(newUser.create())
+            if (newUser.create())
                 return "{ message: \"Success\"}";
             return "{ message: \"fail\"}";
         });
