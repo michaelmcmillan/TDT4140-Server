@@ -42,10 +42,15 @@ public class JSONTranslator {
 
     public static Group toGroup(JSONObject jsonObject) throws JSONException{
         Group group = new Group();
-        group.setId(jsonObject.getInt("id"));
+        if (group.getId() > 0)
+            group.setId(jsonObject.getInt("id"));
         group.setName(jsonObject.getString("name"));
-        group.setCalendarId(jsonObject.getInt("Calendar_id"));
-        group.setSuperGroupId(jsonObject.getInt("Gruppe_id"));
+
+        if (group.getCalendarId() > 0)
+            group.setCalendarId(jsonObject.getInt("Calendar_id"));
+
+        if (group.getSuperGroupId() > 0)
+            group.setSuperGroupId(jsonObject.getInt("Gruppe_id"));
         return group;
     }
 

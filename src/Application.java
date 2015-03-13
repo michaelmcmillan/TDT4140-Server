@@ -139,6 +139,19 @@ public class Application {
             return "{ message: \"fail\"}";
         });
 
+        post("/group", (req, res) -> {
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+
+            Calendar calendar = new Calendar();
+            calendar.create();
+
+            Group group = JSONTranslator.toGroup(new JSONObject(req.body()));
+            group.setCalendarId(calendar.getId());
+            group.create();
+
+            return group.addUser(userId);
+        });
+
         post("/appointment/:calendarId", (req, res) ->{
             int userId = Integer.parseInt(res.raw().getHeader("User"));
 

@@ -43,7 +43,8 @@ public class GroupsServletDao<T extends Group> implements DbService {
 
         map.put("Gruppe_id", groupId);
         map.put("Person_id", personId);
-        return ServletHelper.create("Person_has_Gruppe", map) > 0;
+
+        return ServletHelper.create("Person_has_Gruppe", map) == 0;
     }
 
     public boolean removeUser(int groupId, int personId){
@@ -62,8 +63,8 @@ public class GroupsServletDao<T extends Group> implements DbService {
     @Override
     public boolean create(Object entity) {
         Group group = (Group) entity;
-
-        return ServletHelper.create("Gruppe", group.toHashMap()) > 0;
+        group.setId(ServletHelper.create("Gruppe", group.toHashMap()));
+        return  group.getId() > 0;
     }
 
     @Override

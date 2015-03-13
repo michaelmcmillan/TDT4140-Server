@@ -70,7 +70,7 @@ public class Group implements Model{
         map.put("id", id);
         map.put("name", name);
         map.put("Calendar_id", calendarId);
-        map.put("Group_id", superGroupId);
+        map.put("Gruppe_id", superGroupId);
         return map;
     }
 
