@@ -48,6 +48,10 @@ public class Application {
             return JSONTranslator.toJSON(person).toString();
         });
 
+        get("/users", (req, res) -> {
+            return JSONTranslator.toJSONPersons(Person.getAll());
+        });
+
         get("/user/appointments/:fromyyyyMMdd/:toyyyyMMdd", (req, res) -> {
             int userId = Integer.parseInt(res.raw().getHeader("User"));
             Person person = new Person();
@@ -184,6 +188,8 @@ public class Application {
             Group group = new Group();
             group.setId(Integer.parseInt(req.params("groupId")));
 
+
+            //TODO
             for (Person person : persons){
                 group.addUser(person.getId());
             }
