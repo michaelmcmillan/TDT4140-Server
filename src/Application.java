@@ -183,17 +183,19 @@ public class Application {
         });
 
         post("/group/:groupId/members", (req, res) -> {
-            ArrayList<Person> persons = JSONTranslator.toPersonArrayList(new JSONArray(req.body()));
+
 
             Group group = new Group();
             group.setId(Integer.parseInt(req.params("groupId")));
 
 
-            //TODO
-            for (Person person : persons){
-                group.addUser(person.getId());
+            JSONArray array = new JSONArray(req.body());
+
+            for(int i = 0; i < array.length() ; i ++) {
+                group.addUser(array.getJSONObject(i).getInt("id"));
             }
-            return JSONTranslator.toJSONPersons(persons);
+//            return JSONTranslator.toJSONPersons(persons);
+            return "";
         });
 
         delete("/group/:groupId/:userIdToRemove", (req, res) -> {
