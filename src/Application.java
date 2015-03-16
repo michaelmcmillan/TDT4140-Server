@@ -20,7 +20,7 @@ public class Application {
 
     public static void main(String[] args) {
 
-        //setIpAddress("78.91.74.53");
+        setIpAddress("78.91.80.207");
         setPort(1338);
 
         before((request, response) -> {
@@ -41,6 +41,10 @@ public class Application {
             res.type("application/json");
         });
 
+        get("/user", (req, res) -> {
+            return JSONTranslator.toJSONPersons(Person.getAll());
+        });
+
         get("/user/me", (req, res) -> {
             int userId = Integer.parseInt(res.raw().getHeader("User"));
             Person person = new Person();
@@ -48,9 +52,7 @@ public class Application {
             return JSONTranslator.toJSON(person).toString();
         });
 
-        get("/users", (req, res) -> {
-            return JSONTranslator.toJSONPersons(Person.getAll());
-        });
+
 
         get("/user/appointments/:fromyyyyMMdd/:toyyyyMMdd", (req, res) -> {
             int userId = Integer.parseInt(res.raw().getHeader("User"));
@@ -182,6 +184,22 @@ public class Application {
             return appointment.removeUser(userId);
         });
 
+        get("/group/:groupId/members", (req, res) -> {
+
+
+            Group group = new Group();
+            group.setId(Integer.parseInt(req.params("groupId")));
+
+
+            JSONArray array = new JSONArray(req.body());
+
+            for (int i = 0; i < array.length(); i++) {
+                group.addUser(array.getJSONObject(i).getInt("id"));
+            }
+//            return JSONTranslator.toJSONPersons(persons);
+            return "";
+        });
+
         post("/group/:groupId/members", (req, res) -> {
 
 
@@ -198,13 +216,13 @@ public class Application {
             return "";
         });
 
-        delete("/group/:groupId/:userIdToRemove", (req, res) -> {
-            int userIdToRemove = Integer.parseInt(req.params("userIdToRemove"));
+        delete("/group/:groupId", (req, res) -> {
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
 
             Group group = new Group();
             group.setId(Integer.parseInt(req.params("groupId")));
 
-            return group.removeUser(userIdToRemove);
+            return group.removeUser(userId);
         });
     }
 }

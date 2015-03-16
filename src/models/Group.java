@@ -5,6 +5,7 @@ import database.GroupsServletDao;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Group implements Model{
@@ -27,6 +28,11 @@ public class Group implements Model{
 
     public boolean addUser(int userId){
         return groupServlet.addUser(id, userId);
+    }
+
+    public ArrayList<Person> getAllUsers(){
+//        return groupServlet.getAllUsers(id);
+        return null;
     }
 
     public boolean removeUser(int userId){
