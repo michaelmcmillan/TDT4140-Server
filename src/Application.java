@@ -1,5 +1,6 @@
 import authentication.Authentication;
 import authentication.AuthenticationException;
+import email.Email;
 import json.JSONTranslator;
 import logger.Logger;
 import models.Appointment;
@@ -188,10 +189,9 @@ public class Application {
             Group group = new Group();
             group.setId(Integer.parseInt(req.params("groupId")));
 
-
-            //TODO
             for (Person person : persons){
                 group.addUser(person.getId());
+                new Email(person.getEmail(), "Lagt til", "lol").send();
             }
             return JSONTranslator.toJSONPersons(persons);
         });
