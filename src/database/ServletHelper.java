@@ -15,6 +15,7 @@ public class ServletHelper {
 
     public static int create(String table, HashMap<String, Object> map){
         map.remove("id");
+        map.remove("participating");
         DatabaseConnection database = new DatabaseConnection();
         ArrayList<Object> values = new ArrayList<>();
         String fields = "";

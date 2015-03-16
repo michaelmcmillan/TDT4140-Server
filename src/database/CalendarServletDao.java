@@ -15,7 +15,7 @@ public class CalendarServletDao<T extends Calendar> implements DbService {
     DatabaseConnection database = DatabaseConnection.getInstance();
 
 
-    public ArrayList<Appointment> readAllAppointments(int id) {
+    public ArrayList<Appointment> readAllAppointments(int id, int userId) {
         String select = "SELECT id, tittel, description, start_time, end_time, Room_id, Person_id FROM fellesprosjekt.Appointment_has_Calendar join fellesprosjekt.Appointment ON Appointment_has_Calendar.Appointment_id=Appointment.id Where Calendar_id=" + id;
 
         try {
@@ -33,6 +33,9 @@ public class CalendarServletDao<T extends Calendar> implements DbService {
                 appointment.setEndTime(rows.getString("end_time"));
                 appointment.setRoomId(rows.getInt("Room_id"));
                 appointment.setPersonId(rows.getInt("Person_id"));
+                if (appointment.isParticipating(userId))
+                    appointment.setParticipating(true);
+                else appointment.setParticipating(false);
                 appointments.add(appointment);
             }
             return appointments;
@@ -41,6 +44,8 @@ public class CalendarServletDao<T extends Calendar> implements DbService {
         }
         return null;
     }
+
+
 
     @Override
     public boolean create(Object entity) {

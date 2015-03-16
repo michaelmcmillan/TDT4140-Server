@@ -2,6 +2,8 @@ package database;
 
 import logger.Logger;
 import models.Group;
+import models.Person;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,30 +15,6 @@ public class GroupsServletDao<T extends Group> implements DbService {
 
     DatabaseConnection database = DatabaseConnection.getInstance();
 
-    public  GroupsServletDao(){
-
-    }
-/*
-    public boolean invite(int appointmentId, int userId){
-        HashMap<String, Object> map = new HashMap<>();
-
-        map.put("Appointment_id", appointmentId);
-        map.put("Person_id", userId);
-        return ServletHelper.create("Person_has_Appointment", map) > 0;
-    }
-
-    public boolean removeUser(int appointmentId, int userId){
-        DatabaseConnection database = DatabaseConnection.getInstance();
-        String delete = "DELETE FROM Person_has_Appointment WHERE Person_id=" + userId + " AND Appointment_id=" + appointmentId;
-        try{
-            PreparedStatement preparedStatement = database.getConn().prepareStatement(delete);
-            preparedStatement.execute();
-            return true;
-        }catch (SQLException error){
-            Logger.console(error.getMessage());
-        }
-        return false;
-    } */
 
     public boolean addUser(int groupId, int personId){
         HashMap<String, Object> map = new HashMap<>();

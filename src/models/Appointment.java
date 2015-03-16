@@ -19,6 +19,7 @@ public class Appointment implements Model {
     private String endTime;
     private int roomId;
     private int personId;
+    private boolean participating;
     //****************************
 
     public Appointment(){
@@ -40,6 +41,10 @@ public class Appointment implements Model {
         return appServlet.invite(id, userId);
     }
 
+    public boolean isParticipating(int userId){
+        return appServlet.isParticipating(userId);
+    }
+
     public boolean removeUser(int userId){
         return appServlet.removeUser(id, userId);
     }
@@ -58,7 +63,7 @@ public class Appointment implements Model {
 
     @Override
     public void update() {
-
+        appServlet.update(this);
     }
 
     @Override
@@ -76,6 +81,7 @@ public class Appointment implements Model {
         map.put("end_time", endTime);
         map.put("Room_id", roomId);
         map.put("Person_id", personId);
+        map.put("participating", participating);
         return map;
     }
 
@@ -127,4 +133,15 @@ public class Appointment implements Model {
     public void setPersonId(int personId) {
         this.personId = personId;
     }
+    public boolean isParticipating() {
+        return participating;
+    }
+
+    public void setParticipating(boolean participating) {
+        this.participating = participating;
+    }
+    public boolean getParticipating(){
+        return this.participating;
+    }
+
 }
