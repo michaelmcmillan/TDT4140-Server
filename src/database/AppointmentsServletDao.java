@@ -14,6 +14,21 @@ public class AppointmentsServletDao<T extends Appointment> implements DbService 
 
     DatabaseConnection database = DatabaseConnection.getInstance();
 
+    public boolean isParticipating(int userId){
+        String select = "SELECT * FROM Person_has_Appointment WHERE Person_id=" + userId;
+
+        try{
+
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(select);
+            ResultSet rows = preppedStatement.executeQuery();
+            return rows.next();
+        }catch (SQLException error){
+            Logger.console(error.getMessage());
+        }
+        return false;
+    }
+
 
     @Override
     public boolean create(Object entity) {
@@ -90,7 +105,10 @@ public class AppointmentsServletDao<T extends Appointment> implements DbService 
     public boolean update(Object object) {
         Appointment appointment = (Appointment) object;
 
-        return ServletHelper.update("Appointment", appointment.toHashMap());
+        HashMap<String, Object> appointmentMap = appointment.toHashMap();
+        appointmentMap.remove("participating");
+
+        return ServletHelper.update("Appointment", appointmentMap);
 
     }
 

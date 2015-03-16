@@ -15,37 +15,6 @@ public class GroupsServletDao<T extends Group> implements DbService {
 
     DatabaseConnection database = DatabaseConnection.getInstance();
 
-//    public ArrayList<Person> getAllUsers(int groupId){
-//        ArrayList<Person> persons = new ArrayList<>();
-//
-//        String select = "SELECT * FROM Person";
-//
-//        try {
-//
-//            PreparedStatement preppedStatement = null;
-//            preppedStatement = database.getConn().prepareStatement(select);
-//
-//            ResultSet rows = preppedStatement.executeQuery();
-//
-//            while (rows.next()){
-//                Person person = new Person();
-//
-//                person.setId(rows.getInt("id"));
-//                person.setAlarmTime(rows.getInt("alarm_time"));
-//                person.setEmail(rows.getString("email"));
-//                person.setFirstName(rows.getString("firstname"));
-//                person.setSurname(rows.getString("surname"));
-//                person.setPassword(rows.getString("password"));
-//                person.setCalendarId(rows.getInt("Calendar_id"));
-//
-//                persons.add(person);
-//            }
-//        } catch (Exception e){
-//            System.out.println("Database error: " + e.getMessage());
-//        } finally {
-//            return persons;
-//        }
-//    }
 
     public boolean addUser(int groupId, int personId){
         HashMap<String, Object> map = new HashMap<>();

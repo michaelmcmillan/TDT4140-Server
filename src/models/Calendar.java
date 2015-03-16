@@ -29,8 +29,8 @@ public class Calendar implements Model{
 
     }
 
-    public ArrayList<Appointment> getAllAppointments(){
-        return calendarServlet.readAllAppointments(id);
+    public ArrayList<Appointment> getAllAppointments(int userId){
+        return calendarServlet.readAllAppointments(id, userId);
     }
 
 

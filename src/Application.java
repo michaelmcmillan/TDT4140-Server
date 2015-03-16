@@ -1,5 +1,6 @@
 import authentication.Authentication;
 import authentication.AuthenticationException;
+import email.Email;
 import json.JSONTranslator;
 import logger.Logger;
 import models.Appointment;
@@ -20,7 +21,7 @@ public class Application {
 
     public static void main(String[] args) {
 
-        setIpAddress("127.0.0.1");
+        setIpAddress("78.91.80.207");
         setPort(1339);
 
         before((request, response) -> {
@@ -47,7 +48,20 @@ public class Application {
         });
 
         get("/user", (req, res) -> {
-            return JSONTranslator.toJSONPersons(Person.getAll());
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+
+            Person person = new Person();
+            person.read(userId);
+
+
+            ArrayList<Person> persons = Person.getAll();
+            ArrayList<Person> personsToReturn = new ArrayList<Person>();
+            for (Person user : persons){
+                if (user.getId() != userId)
+                    personsToReturn.add(user);
+            }
+
+            return JSONTranslator.toJSONPersons(personsToReturn);
         });
 
         get("/user/me", (req, res) -> {
@@ -83,6 +97,8 @@ public class Application {
 
         get("/calendar/:calendarId/appointments/:fromyyyyMMdd/:toyyyyMMdd", (req, res) ->{
             int calendarId = Integer.parseInt(req.params(":calendarId"));
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+
 
             Calendar calendar = new Calendar();
             calendar.setId(calendarId);
@@ -90,7 +106,7 @@ public class Application {
             String fromDate = req.params(":fromyyyyMMdd");
             String toDate = req.params(":toyyyyMMdd");
 
-            ArrayList<Appointment> appointments = calendar.getAllAppointments();
+            ArrayList<Appointment> appointments = calendar.getAllAppointments(userId);
             ArrayList<Appointment> appointmentsInterval = new ArrayList<Appointment>();
 
             for (Appointment appointment: appointments) {
@@ -138,9 +154,11 @@ public class Application {
         });
 
         get("/calendar/:calendarId/appointments", (req, res) -> {
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+
             Calendar calendar = new Calendar();
             calendar.setId(Integer.parseInt(req.params("calendarId")));
-            ArrayList<Appointment> appointments = calendar.getAllAppointments();
+            ArrayList<Appointment> appointments = calendar.getAllAppointments(userId);
             return JSONTranslator.toJSONAppointments(appointments);
         });
 
@@ -170,15 +188,32 @@ public class Application {
 
             Appointment appointment = JSONTranslator.toAppointment(new JSONObject(req.body()));
             appointment.setPersonId(userId);
-            return appointment.create(Integer.parseInt(req.params("calendarId")));
+            appointment.create(Integer.parseInt(req.params("calendarId")));
+            return appointment.invite(userId);
         });
 
-        post("/appointment/:appointmentId", (req, res) -> {
+        post("/appointment/:appointmentId/participate", (req, res) -> {
             int userId = Integer.parseInt(res.raw().getHeader("User"));
 
             Appointment appointment = new Appointment();
             appointment.setId(Integer.parseInt(req.params("appointmentId")));
             return appointment.invite(userId);
+        });
+
+        put("/appointment/:appointmentId", (req, res) -> {
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+
+            Appointment appointment = JSONTranslator.toAppointment(new JSONObject(req.body()));
+            appointment.setId(Integer.parseInt(req.params("appointmentId")));
+            appointment.setPersonId(userId);
+            appointment.update();
+            return "{ \"message:\" \"Appointment successfully updated\"}";
+        });
+
+        put("/group/:groupId", (req, res) -> {
+            Group group = JSONTranslator.toGroup(new JSONObject(req.body()));
+            group.update();
+            return "{ \"message:\" \"Group successfully updated\"}";
         });
 
         delete("/appointment/:appointmentId", (req, res) -> {
@@ -201,23 +236,21 @@ public class Application {
             for (int i = 0; i < array.length(); i++) {
                 group.addUser(array.getJSONObject(i).getInt("id"));
             }
-//            return JSONTranslator.toJSONPersons(persons);
             return "";
         });
 
         post("/group/:groupId/members", (req, res) -> {
-
-
             Group group = new Group();
             group.setId(Integer.parseInt(req.params("groupId")));
 
-
             JSONArray array = new JSONArray(req.body());
-
-            for(int i = 0; i < array.length() ; i ++) {
-                group.addUser(array.getJSONObject(i).getInt("id"));
+            for (int i = 0; i < array.length(); i++) {
+                int userIdToAdd = array.getJSONObject(i).getInt("id");
+                String emailToAdd = array.getJSONObject(i).getString("email");
+                group.addUser(userIdToAdd);
+                new Email(emailToAdd, "Lagt til", "lol").send();
             }
-//            return JSONTranslator.toJSONPersons(persons);
+
             return "";
         });
 

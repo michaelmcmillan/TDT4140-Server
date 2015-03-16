@@ -62,7 +62,7 @@ public class Group implements Model{
 
     @Override
     public void update() {
-
+        groupServlet.update(this);
     }
 
     @Override

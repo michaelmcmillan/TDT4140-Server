@@ -114,6 +114,7 @@ public class JSONTranslator {
         jsonObject.put("end_time", appointment.getEndTime());
         jsonObject.put("Person_id", appointment.getPersonId());
         jsonObject.put("Room_id", appointment.getRoomId());
+        jsonObject.put("participating", appointment.getParticipating());
         return jsonObject;
     }
 
@@ -129,6 +130,7 @@ public class JSONTranslator {
             jsonObject.put("end_time", appointment.getEndTime());
             jsonObject.put("Person_id", appointment.getPersonId());
             jsonObject.put("Room_id", appointment.getRoomId());
+            jsonObject.put("participating", appointment.getParticipating());
             jsonArray.put(jsonObject);
         }
         return jsonArray;
