@@ -99,7 +99,11 @@ public class GroupsServletDao<T extends Group> implements DbService {
     public boolean update(Object object) {
         Group group = (Group) object;
 
-        return ServletHelper.update("Gruppe", group.toHashMap());
+        HashMap<String, Object> map = group.toHashMap();
+        map.remove("Calendar_id");
+
+
+        return ServletHelper.update("Gruppe", map);
     }
 
     @Override

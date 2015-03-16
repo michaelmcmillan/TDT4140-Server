@@ -22,7 +22,7 @@ public class Application {
     public static void main(String[] args) {
 
         setIpAddress("78.91.80.207");
-        setPort(1339);
+        setPort(1340);
 
         before((request, response) -> {
 
@@ -192,7 +192,7 @@ public class Application {
             return appointment.invite(userId);
         });
 
-        post("/appointment/:appointmentId/participate", (req, res) -> {
+        post("/appointment/:appointmentId/participants", (req, res) -> {
             int userId = Integer.parseInt(res.raw().getHeader("User"));
 
             Appointment appointment = new Appointment();
@@ -201,22 +201,35 @@ public class Application {
         });
 
         put("/appointment/:appointmentId", (req, res) -> {
-            int userId = Integer.parseInt(res.raw().getHeader("User"));
+            int appointmentId = Integer.parseInt(req.params("appointmentId"));
 
-            Appointment appointment = JSONTranslator.toAppointment(new JSONObject(req.body()));
-            appointment.setId(Integer.parseInt(req.params("appointmentId")));
-            appointment.setPersonId(userId);
+            Appointment inputAppointment = JSONTranslator.toAppointment(new JSONObject(req.body()));
+
+            Appointment appointment = new Appointment();
+
+            appointment.read(appointmentId);
+            appointment.setTittel(inputAppointment.getTittel());
+            appointment.setStartTime(inputAppointment.getStartTime());
+            appointment.setEndTime(inputAppointment.getEndTime());
+            appointment.setDescription(inputAppointment.getDescription());
+
             appointment.update();
             return "{ \"message:\" \"Appointment successfully updated\"}";
         });
 
         put("/group/:groupId", (req, res) -> {
-            Group group = JSONTranslator.toGroup(new JSONObject(req.body()));
+            Group inputGroup = JSONTranslator.toGroup(new JSONObject(req.body()));
+
+            Group group = new Group();
+            group.read(Integer.parseInt(req.params("groupId")));
+
+            group.setName(inputGroup.getName());
             group.update();
+
             return "{ \"message:\" \"Group successfully updated\"}";
         });
 
-        delete("/appointment/:appointmentId", (req, res) -> {
+        delete("/appointment/:appointmentId/participants", (req, res) -> {
             int userId = Integer.parseInt(res.raw().getHeader("User"));
 
             Appointment appointment = new Appointment();
@@ -225,8 +238,6 @@ public class Application {
         });
 
         get("/group/:groupId/members", (req, res) -> {
-
-
             Group group = new Group();
             group.setId(Integer.parseInt(req.params("groupId")));
 
