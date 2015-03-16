@@ -9,26 +9,22 @@ public class Email {
     
     private String subject;
     private List<String> to;
-    private String from;
+    private String from = "yolo.fellesprosjekt@gmail.com";
     private String body;
 
-    public Email (ArrayList<String> to, String from, String subject, String body) {
-        this.to = to; 
-        this.from = from; 
-        this.subject = subject; 
+    public Email (ArrayList<String> to, String subject, String body) {
+        this.to = to;
+        this.subject = subject;
         this.body = body;
-        send();
     }
 
-    // TODO: Overload constructor with single string
-//    public Email (String to, String from, String subject, String body) {
-//        ArrayList<String> toString = new ArrayList<String>();
-//        toString.add(to);
-//        this(toString, from, subject, body);
-//    }
+    public Email (String to, String subject, String body) {
+        this(new ArrayList<String>(), subject, body);
+        this.to.add(to);
+    }
     
     public boolean send () {
-        final String username = "yolo.fellesprosjekt@gmail.com";
+        final String username = this.from;
         final String password = "fellesprosjekternoedrit";
 
         Properties props = new Properties();
@@ -46,7 +42,7 @@ public class Email {
         try {
             for (String recipient : to) {
                 Message message = new MimeMessage(session);
-                message.setFrom(new InternetAddress("yolo.fellesprosjekt@gmail.com"));
+                message.setFrom(new InternetAddress(this.from));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
                 message.setSubject(this.subject);
                 message.setText(this.body);

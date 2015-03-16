@@ -1,5 +1,6 @@
 import authentication.Authentication;
 import authentication.AuthenticationException;
+import email.Email;
 import json.JSONTranslator;
 import logger.Logger;
 import models.Appointment;
@@ -245,18 +246,17 @@ public class Application {
         });
 
         post("/group/:groupId/members", (req, res) -> {
-
-
             Group group = new Group();
             group.setId(Integer.parseInt(req.params("groupId")));
 
-
             JSONArray array = new JSONArray(req.body());
-
-            for(int i = 0; i < array.length() ; i ++) {
-                group.addUser(array.getJSONObject(i).getInt("id"));
+            for (int i = 0; i < array.length(); i++) {
+                int userIdToAdd = array.getJSONObject(i).getInt("id");
+                String emailToAdd = array.getJSONObject(i).getString("email");
+                group.addUser(userIdToAdd);
+                new Email(emailToAdd, "Lagt til", "lol").send();
             }
-//            return JSONTranslator.toJSONPersons(persons);
+
             return "";
         });
 
