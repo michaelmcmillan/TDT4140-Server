@@ -20,20 +20,25 @@ public class Application {
 
     public static void main(String[] args) {
 
-        setIpAddress("78.91.80.207");
-        setPort(1338);
+        setIpAddress("127.0.0.1");
+        setPort(1339);
 
         before((request, response) -> {
 
             String authHeader = request.headers("Authorization");
             Authentication authentication = new Authentication(authHeader);
+            System.out.println(request.uri());
+            System.out.println(request.requestMethod().equals("POST"));
 
-            try {
-                response.raw().setIntHeader("User", authentication.checkCredentials());
-            } catch (AuthenticationException authError) {
-                Logger.console(authError.getMessage(), request.ip());
-                halt(401, "{\"message\": \"Du er ikke autentisert.\"}");
+            if(!request.uri().equals("/user") && !request.requestMethod().equals("POST")){
+                try {
+                    response.raw().setIntHeader("User", authentication.checkCredentials());
+                } catch (AuthenticationException authError) {
+                    Logger.console(authError.getMessage(), request.ip());
+                    halt(401, "{\"message\": \"Du er ikke autentisert.\"}");
+                }
             }
+
         });
 
         after((req, res) -> {
@@ -65,9 +70,9 @@ public class Application {
             ArrayList<Appointment> appointments = person.getAllAppointments();
             ArrayList<Appointment> appointmentsInterval = new ArrayList<Appointment>();
 
-            for (Appointment appointment: appointments) {
+            for (Appointment appointment : appointments) {
                 String appointmentStart = appointment.getStartTime().split(" ")[0];
-                String appointmentEnd   = appointment.getEndTime().split(" ")[0];
+                String appointmentEnd = appointment.getEndTime().split(" ")[0];
 
                 if (appointmentStart.compareTo(fromDate) >= 0 && appointmentEnd.compareTo(toDate) <= 0)
                     appointmentsInterval.add(appointment);
@@ -160,7 +165,7 @@ public class Application {
             return JSONTranslator.toJSON(group);
         });
 
-        post("/appointment/:calendarId", (req, res) ->{
+        post("/appointment/:calendarId", (req, res) -> {
             int userId = Integer.parseInt(res.raw().getHeader("User"));
 
             Appointment appointment = JSONTranslator.toAppointment(new JSONObject(req.body()));
