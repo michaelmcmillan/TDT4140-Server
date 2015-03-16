@@ -21,7 +21,7 @@ public class Application {
     public static void main(String[] args) {
 
         setIpAddress("78.91.80.207");
-        setPort(1339);
+        setPort(1340);
 
         before((request, response) -> {
 
@@ -206,6 +206,7 @@ public class Application {
 
         put("/group/:groupId", (req, res) -> {
             Group group = JSONTranslator.toGroup(new JSONObject(req.body()));
+            group.setId(Integer.parseInt(req.params("groupId")));
             group.update();
             return "{ \"message:\" \"Group successfully updated\"}";
         });
