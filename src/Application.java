@@ -21,7 +21,7 @@ public class Application {
     public static void main(String[] args) {
 
         setIpAddress("78.91.80.207");
-        setPort(1338);
+        setPort(1339);
 
         before((request, response) -> {
 
@@ -42,7 +42,20 @@ public class Application {
         });
 
         get("/user", (req, res) -> {
-            return JSONTranslator.toJSONPersons(Person.getAll());
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+
+            Person person = new Person();
+            person.read(userId);
+
+
+            ArrayList<Person> persons = Person.getAll();
+            ArrayList<Person> personsToReturn = new ArrayList<Person>();
+            for (Person user : persons){
+                if (user.getId() != userId)
+                    personsToReturn.add(user);
+            }
+
+            return JSONTranslator.toJSONPersons(personsToReturn);
         });
 
         get("/user/me", (req, res) -> {
@@ -78,6 +91,8 @@ public class Application {
 
         get("/calendar/:calendarId/appointments/:fromyyyyMMdd/:toyyyyMMdd", (req, res) ->{
             int calendarId = Integer.parseInt(req.params(":calendarId"));
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+
 
             Calendar calendar = new Calendar();
             calendar.setId(calendarId);
@@ -85,7 +100,7 @@ public class Application {
             String fromDate = req.params(":fromyyyyMMdd");
             String toDate = req.params(":toyyyyMMdd");
 
-            ArrayList<Appointment> appointments = calendar.getAllAppointments();
+            ArrayList<Appointment> appointments = calendar.getAllAppointments(userId);
             ArrayList<Appointment> appointmentsInterval = new ArrayList<Appointment>();
 
             for (Appointment appointment: appointments) {
@@ -133,9 +148,11 @@ public class Application {
         });
 
         get("/calendar/:calendarId/appointments", (req, res) -> {
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+
             Calendar calendar = new Calendar();
             calendar.setId(Integer.parseInt(req.params("calendarId")));
-            ArrayList<Appointment> appointments = calendar.getAllAppointments();
+            ArrayList<Appointment> appointments = calendar.getAllAppointments(userId);
             return JSONTranslator.toJSONAppointments(appointments);
         });
 
@@ -165,7 +182,8 @@ public class Application {
 
             Appointment appointment = JSONTranslator.toAppointment(new JSONObject(req.body()));
             appointment.setPersonId(userId);
-            return appointment.create(Integer.parseInt(req.params("calendarId")));
+            appointment.create(Integer.parseInt(req.params("calendarId")));
+            return appointment.invite(userId);
         });
 
         post("/appointment/:appointmentId/participate", (req, res) -> {
@@ -183,7 +201,13 @@ public class Application {
             appointment.setId(Integer.parseInt(req.params("appointmentId")));
             appointment.setPersonId(userId);
             appointment.update();
-            return "";
+            return "{ \"message:\" \"Appointment successfully updated\"}";
+        });
+
+        put("/group/:groupId", (req, res) -> {
+            Group group = JSONTranslator.toGroup(new JSONObject(req.body()));
+            group.update();
+            return "{ \"message:\" \"Group successfully updated\"}";
         });
 
         delete("/appointment/:appointmentId", (req, res) -> {
