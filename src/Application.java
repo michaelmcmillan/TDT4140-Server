@@ -186,7 +186,7 @@ public class Application {
             return appointment.invite(userId);
         });
 
-        post("/appointment/:appointmentId/participate", (req, res) -> {
+        post("/appointment/:appointmentId/participants", (req, res) -> {
             int userId = Integer.parseInt(res.raw().getHeader("User"));
 
             Appointment appointment = new Appointment();
@@ -223,7 +223,7 @@ public class Application {
             return "{ \"message:\" \"Group successfully updated\"}";
         });
 
-        delete("/appointment/:appointmentId", (req, res) -> {
+        delete("/appointment/:appointmentId/participants", (req, res) -> {
             int userId = Integer.parseInt(res.raw().getHeader("User"));
 
             Appointment appointment = new Appointment();
@@ -241,7 +241,6 @@ public class Application {
             for (int i = 0; i < array.length(); i++) {
                 group.addUser(array.getJSONObject(i).getInt("id"));
             }
-//            return JSONTranslator.toJSONPersons(persons);
             return "";
         });
 
