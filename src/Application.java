@@ -168,12 +168,22 @@ public class Application {
             return appointment.create(Integer.parseInt(req.params("calendarId")));
         });
 
-        post("/appointment/:appointmentId", (req, res) -> {
+        post("/appointment/:appointmentId/participate", (req, res) -> {
             int userId = Integer.parseInt(res.raw().getHeader("User"));
 
             Appointment appointment = new Appointment();
             appointment.setId(Integer.parseInt(req.params("appointmentId")));
             return appointment.invite(userId);
+        });
+
+        put("/appointment/:appointmentId", (req, res) -> {
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+
+            Appointment appointment = JSONTranslator.toAppointment(new JSONObject(req.body()));
+            appointment.setId(Integer.parseInt(req.params("appointmentId")));
+            appointment.setPersonId(userId);
+            appointment.update();
+            return "";
         });
 
         delete("/appointment/:appointmentId", (req, res) -> {

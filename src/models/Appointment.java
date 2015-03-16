@@ -58,7 +58,7 @@ public class Appointment implements Model {
 
     @Override
     public void update() {
-
+        appServlet.update(this);
     }
 
     @Override
