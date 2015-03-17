@@ -1,3 +1,4 @@
+import alarm.Alarm;
 import authentication.Authentication;
 import authentication.AuthenticationException;
 import email.Email;
@@ -14,15 +15,19 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Timer;
 
 import static spark.Spark.*;
 
 public class Application {
 
     public static void main(String[] args) {
+        Timer timer = new Timer();
+        timer.schedule(new Alarm(),0, 5000);
+
 
         setIpAddress("78.91.80.207");
-        setPort(1341);
+        setPort(1342);
 
         before((request, response) -> {
 
