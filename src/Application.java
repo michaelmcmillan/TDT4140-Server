@@ -269,7 +269,6 @@ public class Application {
 
         get("/supergroups", (req,res) -> {
             int userId = Integer.parseInt(res.raw().getHeader("User"));
-
             return JSONTranslator.toJSONGroups(Group.getAllSupergroups(userId));
         });
 
@@ -295,6 +294,16 @@ public class Application {
             group.setId(Integer.parseInt(req.params("groupId")));
 
             return group.removeUser(userId);
+        });
+
+        delete("/appointment/:appointmentId", (req, res) ->{
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+            Appointment appointment = new Appointment();
+            appointment.read(Integer.parseInt(req.params("appointmentId")));
+
+            if (appointment.getPersonId() == userId)
+                appointment.delete();
+            return "";
         });
     }
 }
