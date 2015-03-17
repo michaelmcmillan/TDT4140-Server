@@ -42,7 +42,7 @@ public class Appointment implements Model {
     }
 
     public boolean isParticipating(int userId){
-        return appServlet.isParticipating(userId);
+        return appServlet.isParticipating(userId, id);
     }
 
     public boolean removeUser(int userId){

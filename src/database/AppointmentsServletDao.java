@@ -14,8 +14,8 @@ public class AppointmentsServletDao<T extends Appointment> implements DbService 
 
     DatabaseConnection database = DatabaseConnection.getInstance();
 
-    public boolean isParticipating(int userId){
-        String select = "SELECT * FROM Person_has_Appointment WHERE Person_id=" + userId;
+    public boolean isParticipating(int userId, int appointmentId){
+        String select = "SELECT * FROM Person_has_Appointment WHERE Person_id=" + userId + " AND Appointment_id=" + appointmentId ;
 
         try{
 

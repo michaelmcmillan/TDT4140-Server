@@ -28,10 +28,8 @@ public class Application {
 
             String authHeader = request.headers("Authorization");
             Authentication authentication = new Authentication(authHeader);
-            System.out.println(request.uri());
-            System.out.println(request.requestMethod().equals("POST"));
 
-            if(!request.uri().equals("/user") && !request.requestMethod().equals("POST")){
+            if(!(request.uri().equals("/user") && request.requestMethod().equals("POST"))){
                 try {
                     response.raw().setIntHeader("User", authentication.checkCredentials());
                 } catch (AuthenticationException authError) {
