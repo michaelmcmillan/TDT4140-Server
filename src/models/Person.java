@@ -43,8 +43,8 @@ public class Person implements Model{
         return personsServlet.readAllGroups(id);
     }
 
-    public ArrayList<Appointment> getAllAppointments(){
-        return personsServlet.readAllAppointments(id);
+    public ArrayList<Appointment> getAllAttendingAppointments(){
+        return personsServlet.readAllAttendingAppointments(id);
     }
 
     public void addGroup(Group group){

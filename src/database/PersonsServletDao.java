@@ -12,7 +12,7 @@ public class PersonsServletDao<T extends Person> implements DbService{
 
     DatabaseConnection database = DatabaseConnection.getInstance();
 
-    public ArrayList<Appointment> readAllAppointments(int id){
+    public ArrayList<Appointment> readAllAttendingAppointments(int id){
 
         ArrayList<Appointment> appointments = new ArrayList<>();
 
@@ -55,7 +55,7 @@ public class PersonsServletDao<T extends Person> implements DbService{
         ArrayList<Group> groups = new ArrayList<>();
 
         String select =
-                "SELECT id, name, Calendar_id, Person_has_Gruppe.Gruppe_id " +
+                "SELECT id as groupId, name, Calendar_id,  Gruppe.Gruppe_id " +
                         "FROM Person_has_Gruppe " +
                         "JOIN Gruppe ON Person_has_Gruppe.Gruppe_id = id " +
                         "WHERE Person_id = ?";
@@ -70,11 +70,10 @@ public class PersonsServletDao<T extends Person> implements DbService{
             while (rows.next()) {
                 Group group= new Group();
 
-                group.setId(rows.getInt("id"));
+                group.setId(rows.getInt("groupId"));
                 group.setName(rows.getString("name"));
                 group.setCalendarId(rows.getInt("Calendar_id"));
-                if (rows.getInt("Gruppe_id") != 0)
-                    group.setSuperGroupId(rows.getInt("Gruppe_id"));
+                group.setSuperGroupId(rows.getInt("Gruppe_id"));
 
                 groups.add(group);
             }

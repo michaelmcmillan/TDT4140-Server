@@ -69,9 +69,7 @@ public class Group implements Model{
         this.id = group.getId();
         this.name = group.getName();
         this.calendarId = group.getCalendarId();
-
-        if (group.getSuperGroupId() == 0)
-            this.superGroupId = group.getSuperGroupId();
+        this.superGroupId = group.getSuperGroupId();
     }
 
     @Override

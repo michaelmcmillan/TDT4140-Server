@@ -79,7 +79,7 @@ public class Application {
             String fromDate = req.params(":fromyyyyMMdd");
             String toDate = req.params(":toyyyyMMdd");
 
-            ArrayList<Appointment> appointments = person.getAllAppointments();
+            ArrayList<Appointment> appointments = person.getAllAttendingAppointments();
             ArrayList<Appointment> appointmentsInterval = new ArrayList<Appointment>();
 
             for (Appointment appointment : appointments) {
@@ -97,35 +97,48 @@ public class Application {
             int calendarId = Integer.parseInt(req.params(":calendarId"));
             int userId = Integer.parseInt(res.raw().getHeader("User"));
 
-
-
-
-            Calendar subCalendar = new Calendar();
-            Calendar superCalendar = new Calendar();
-            subCalendar.setId(calendarId);
-
-            int superGroupId = subCalendar.getSuperGroupId();
-            if (superGroupId > 0){
-                Group group = new Group();
-                group.read(superGroupId);
-                int superCalendarId = group.getCalendarId();
-                superCalendar.setId(superCalendarId);
-            }
-
-
-
-
-
             String fromDate = req.params(":fromyyyyMMdd");
             String toDate = req.params(":toyyyyMMdd");
 
-            ArrayList<Appointment> appointmentsFromSubGroup = subCalendar.getAllAppointments(userId);
-            ArrayList<Appointment> appointmentsFromSuperGroup = superCalendar.getAllAppointments(userId);
-            ArrayList<Appointment> appointmentsInterval = new ArrayList<Appointment>();
+            Person person = new Person();
+            person.read(userId);
 
             ArrayList<Appointment> combinedAppointments = new ArrayList<Appointment>();
-            combinedAppointments.addAll(appointmentsFromSuperGroup);
-            combinedAppointments.addAll(appointmentsFromSubGroup);
+            ArrayList<Appointment> appointmentsInterval = new ArrayList<Appointment>();
+
+
+            if (calendarId == person.getCalendarId()){
+                /* HER MERGES PRIVAT KALENDER MED ALLE DELTAKENDE APPOINTMENTS */
+                ArrayList<Appointment> attendingAppointments = person.getAllAttendingAppointments();
+
+
+
+
+
+
+
+            }else {
+                /* HER MERGES SUPERGROUP MED SUBGROUP */
+
+                Calendar subCalendar = new Calendar();
+                Calendar superCalendar = new Calendar();
+                subCalendar.setId(calendarId);
+
+                int superGroupId = subCalendar.getSuperGroupId();
+                if (superGroupId > 0){
+                    Group group = new Group();
+                    group.read(superGroupId);
+                    int superCalendarId = group.getCalendarId();
+                    superCalendar.setId(superCalendarId);
+                }
+
+
+                ArrayList<Appointment> appointmentsFromSubGroup = subCalendar.getAllAppointments(userId);
+                ArrayList<Appointment> appointmentsFromSuperGroup = superCalendar.getAllAppointments(userId);
+
+                combinedAppointments.addAll(appointmentsFromSuperGroup);
+                combinedAppointments.addAll(appointmentsFromSubGroup);
+            }
 
             for (Appointment appointment: combinedAppointments) {
 
@@ -157,7 +170,7 @@ public class Application {
 
             Person person = new Person();
             person.read(userId);
-            ArrayList<Appointment> appointments = person.getAllAppointments();
+            ArrayList<Appointment> appointments = person.getAllAttendingAppointments();
 
             return JSONTranslator.toJSONAppointments(appointments);
         });
