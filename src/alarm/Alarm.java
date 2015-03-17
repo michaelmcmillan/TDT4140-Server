@@ -22,7 +22,7 @@ public class Alarm extends TimerTask {
         try {
             while(rows.next()){
                 String key = rows.getString("Person_id") + "." + rows.getString("Appointment_id");
-                if (!map.containsKey(key)){
+                if (!map.containsKey(key) && rows.getInt("alarm_time") != 0){
                     map.put(key, "sent");
                     new Email(rows.getString("email"), "Avtale begynner snart", "Avtale " + rows.getString("tittel") + " begynner om " + rows.getInt("alarm_seconds")/60 + " minutter.").send();
                     System.out.println("Sender mail " + rows.getString("tittel"));
