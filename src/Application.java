@@ -98,16 +98,36 @@ public class Application {
             int userId = Integer.parseInt(res.raw().getHeader("User"));
 
 
-            Calendar calendar = new Calendar();
-            calendar.setId(calendarId);
+
+
+            Calendar subCalendar = new Calendar();
+            Calendar superCalendar = new Calendar();
+            subCalendar.setId(calendarId);
+
+            int superGroupId = subCalendar.getSuperGroupId();
+            if (superGroupId > 0){
+                Group group = new Group();
+                group.read(superGroupId);
+                int superCalendarId = group.getCalendarId();
+                superCalendar.setId(superCalendarId);
+            }
+
+
+
+
 
             String fromDate = req.params(":fromyyyyMMdd");
             String toDate = req.params(":toyyyyMMdd");
 
-            ArrayList<Appointment> appointments = calendar.getAllAppointments(userId);
+            ArrayList<Appointment> appointmentsFromSubGroup = subCalendar.getAllAppointments(userId);
+            ArrayList<Appointment> appointmentsFromSuperGroup = superCalendar.getAllAppointments(userId);
             ArrayList<Appointment> appointmentsInterval = new ArrayList<Appointment>();
 
-            for (Appointment appointment: appointments) {
+            ArrayList<Appointment> combinedAppointments = new ArrayList<Appointment>();
+            combinedAppointments.addAll(appointmentsFromSuperGroup);
+            combinedAppointments.addAll(appointmentsFromSubGroup);
+
+            for (Appointment appointment: combinedAppointments) {
 
                 String appointmentStart = appointment.getStartTime().split(" ")[0];
                 String appointmentEnd   = appointment.getEndTime().split(" ")[0];
@@ -149,15 +169,6 @@ public class Application {
             person.read(userId);
             ArrayList<Group> groups = person.getAllGroups();
             return JSONTranslator.toJSONGroups(groups);
-        });
-
-        get("/calendar/:calendarId/appointments", (req, res) -> {
-            int userId = Integer.parseInt(res.raw().getHeader("User"));
-
-            Calendar calendar = new Calendar();
-            calendar.setId(Integer.parseInt(req.params("calendarId")));
-            ArrayList<Appointment> appointments = calendar.getAllAppointments(userId);
-            return JSONTranslator.toJSONAppointments(appointments);
         });
 
         post("/user", (req, res) -> {
@@ -254,7 +265,7 @@ public class Application {
                 int userIdToAdd = array.getJSONObject(i).getInt("id");
                 String emailToAdd = array.getJSONObject(i).getString("email");
                 group.addUser(userIdToAdd);
-                new Email(emailToAdd, "Lagt til", "lol").send();
+//                new Email(emailToAdd, "Lagt til", "lol").send();
             }
 
             return "";

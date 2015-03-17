@@ -33,6 +33,10 @@ public class Calendar implements Model{
         return calendarServlet.readAllAppointments(id, userId);
     }
 
+    public int getSuperGroupId(){
+        return calendarServlet.getSuperGroupId(id);
+    }
+
 
     public JSONArray appointmentsToJSON(){
         return new JSONArray();

@@ -14,6 +14,27 @@ public class CalendarServletDao<T extends Calendar> implements DbService {
 
     DatabaseConnection database = DatabaseConnection.getInstance();
 
+    public int getSuperGroupId(int calendarId){
+        String select = "SELECT Gruppe_id " +
+        "FROM fellesprosjekt.Calendar " +
+        "JOIN fellesprosjekt.Gruppe " +
+        "ON Calendar.id=Gruppe.Calendar_id " +
+        "WHERE Gruppe_id is not null AND Calendar.id=" + calendarId;
+
+
+        try {
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(select);
+            ResultSet rows = preppedStatement.executeQuery();
+            while (rows.next()) {
+                return rows.getInt("Gruppe_id");
+            }
+        } catch (SQLException error) {
+            Logger.console(error.getMessage());
+        }
+        return 0;
+    }
+
 
     public ArrayList<Appointment> readAllAppointments(int id, int userId) {
         String select = "SELECT id, tittel, description, start_time, end_time, Room_id, Person_id FROM fellesprosjekt.Appointment_has_Calendar join fellesprosjekt.Appointment ON Appointment_has_Calendar.Appointment_id=Appointment.id Where Calendar_id=" + id;
