@@ -238,14 +238,7 @@ public class Application {
         get("/group/:groupId/members", (req, res) -> {
             Group group = new Group();
             group.setId(Integer.parseInt(req.params("groupId")));
-
-
-            JSONArray array = new JSONArray(req.body());
-
-            for (int i = 0; i < array.length(); i++) {
-                group.addUser(array.getJSONObject(i).getInt("id"));
-            }
-            return "";
+            return JSONTranslator.toJSONPersons(group.getAllMembers());
         });
 
         post("/group/:groupId/members", (req, res) -> {

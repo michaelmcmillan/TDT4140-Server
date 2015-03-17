@@ -38,6 +38,39 @@ public class GroupsServletDao<T extends Group> implements DbService {
         return false;
     }
 
+    public ArrayList<Person> getAllMembers(int id) {
+        ArrayList<Person> persons = new ArrayList<>();
+
+        String select = "SELECT * FROM fellesprosjekt.Person_has_Gruppe " +
+                        "JOIN fellesprosjekt.Person ON Person_has_Gruppe.Person_id=Person.id " +
+                        "WHERE Person_has_Gruppe.Gruppe_id=" +id ;
+        try {
+
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(select);
+
+            ResultSet rows = preppedStatement.executeQuery();
+
+            while (rows.next()){
+                Person person = new Person();
+
+                person.setId(rows.getInt("id"));
+                person.setAlarmTime(rows.getInt("alarm_time"));
+                person.setEmail(rows.getString("email"));
+                person.setFirstName(rows.getString("firstname"));
+                person.setSurname(rows.getString("surname"));
+                person.setPassword(rows.getString("password"));
+                person.setCalendarId(rows.getInt("Calendar_id"));
+
+                persons.add(person);
+            }
+        } catch (Exception e){
+            System.out.println("Database error: " + e.getMessage());
+        } finally {
+            return persons;
+        }
+    }
+
     @Override
     public boolean create(Object entity) {
         Group group = (Group) entity;

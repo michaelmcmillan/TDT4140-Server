@@ -30,9 +30,8 @@ public class Group implements Model{
         return groupServlet.addUser(id, userId);
     }
 
-    public ArrayList<Person> getAllUsers(){
-//        return groupServlet.getAllUsers(id);
-        return null;
+    public ArrayList<Person> getAllMembers(){
+        return groupServlet.getAllMembers(id);
     }
 
     public boolean removeUser(int userId){
