@@ -241,6 +241,10 @@ public class Application {
             return JSONTranslator.toJSONPersons(group.getAllMembers());
         });
 
+        get("/supergroups", (req,res) -> {
+            return JSONTranslator.toJSONGroups(Group.getAllSupergroups());
+        });
+
         post("/group/:groupId/members", (req, res) -> {
             Group group = new Group();
             group.setId(Integer.parseInt(req.params("groupId")));

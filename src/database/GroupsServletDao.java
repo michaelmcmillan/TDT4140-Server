@@ -105,14 +105,14 @@ public class GroupsServletDao<T extends Group> implements DbService {
     @Override
     public ArrayList readAll() {
         ArrayList<Group> groups = new ArrayList<>();
-        String select = "SELECT * FROM Person";
+        String select = "SELECT * FROM Gruppe";
 
         try{
             PreparedStatement preppedStatement = null;
             preppedStatement = database.getConn().prepareStatement(select);
             ResultSet rows = preppedStatement.executeQuery();
 
-            while (rows.next()) {
+            while (rows.next()){
                 Group group = new Group();
 
                 group.setId(rows.getInt("id"));

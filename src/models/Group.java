@@ -5,6 +5,7 @@ import database.GroupsServletDao;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -38,6 +39,20 @@ public class Group implements Model{
         return groupServlet.removeUser(id, userId);
     }
 
+
+    public static ArrayList<Group> getAllSupergroups(){
+        GroupsServletDao groupServlet = new GroupsServletDao();
+        ArrayList<Group> groups = groupServlet.readAll();
+
+        ArrayList<Group> groupsToReturn = new ArrayList<>();
+
+        for (Group group : groups){
+            if (group.getSuperGroupId() == 0)
+                groupsToReturn.add(group);
+        }
+
+        return groupsToReturn;
+    }
 
     @Override
     public boolean create(){
