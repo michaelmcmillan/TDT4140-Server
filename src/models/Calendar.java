@@ -15,8 +15,6 @@ public class Calendar implements Model{
 
     private CalendarServletDao calendarServlet;
 
-    private ArrayList<Appointment> appointments;
-
     //*****TABLE ATTRIBUTES*******
     private int id;
     //*********THATS IT***********
@@ -74,11 +72,5 @@ public class Calendar implements Model{
     }
     public void setId(int id) {
         this.id = id;
-    }
-    public ArrayList<Appointment> getAppointments() {
-        return appointments;
-    }
-    public void setAppointments(ArrayList<Appointment> appointments) {
-        this.appointments = appointments;
     }
 }

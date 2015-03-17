@@ -22,7 +22,7 @@ public class Application {
     public static void main(String[] args) {
 
         setIpAddress("78.91.80.207");
-        setPort(1340);
+        setPort(1341);
 
         before((request, response) -> {
 
@@ -111,12 +111,14 @@ public class Application {
                 /* HER MERGES PRIVAT KALENDER MED ALLE DELTAKENDE APPOINTMENTS */
                 ArrayList<Appointment> attendingAppointments = person.getAllAttendingAppointments();
 
+                Calendar personalCalendar = new Calendar();
+                personalCalendar.read(calendarId);
 
+                ArrayList<Appointment> appointmentsInCalendar = personalCalendar.getAllAppointments(userId);
+                combinedAppointments.addAll(personalCalendar.getAllAppointments(userId));
+                combinedAppointments.addAll(attendingAppointments);
 
-
-
-
-
+                String hei = "";
             }else {
                 /* HER MERGES SUPERGROUP MED SUBGROUP */
 

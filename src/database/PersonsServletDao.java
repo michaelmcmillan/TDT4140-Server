@@ -21,13 +21,12 @@ public class PersonsServletDao<T extends Person> implements DbService{
                 "end_time, Room_id, Appointment.Person_id " +
                 "FROM Person_has_Appointment " +
                     "JOIN Appointment ON Person_has_Appointment.Appointment_id=id " +
-                "WHERE Person_has_Appointment.Person_id= ?";
+                "WHERE Person_has_Appointment.Person_id=" + id;
 
         try {
 
             PreparedStatement preppedStatement = null;
             preppedStatement = database.getConn().prepareStatement(select);
-            preppedStatement.setInt(1, id);
 
             ResultSet rows = preppedStatement.executeQuery();
 
@@ -41,13 +40,14 @@ public class PersonsServletDao<T extends Person> implements DbService{
                 appointment.setEndTime    (rows.getString("end_time"));
                 appointment.setRoomId     (rows.getInt("Room_id"));
                 appointment.setPersonId   (rows.getInt("Person_id"));
-
+                appointment.setParticipating(true);
                 appointments.add(appointment);
             }
+
+            return appointments;
         } catch (SQLException error) {
             Logger.console(error.getMessage());
-        } finally {
-            return appointments;
+            return null;
         }
     }
 
