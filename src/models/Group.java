@@ -40,18 +40,10 @@ public class Group implements Model{
     }
 
 
-    public static ArrayList<Group> getAllSupergroups(){
+    public static ArrayList<Group> getAllSupergroups(int userId){
         GroupsServletDao groupServlet = new GroupsServletDao();
-        ArrayList<Group> groups = groupServlet.readAll();
-
-        ArrayList<Group> groupsToReturn = new ArrayList<>();
-
-        for (Group group : groups){
-            if (group.getSuperGroupId() == 0)
-                groupsToReturn.add(group);
-        }
-
-        return groupsToReturn;
+        ArrayList<Group> groups = groupServlet.readSuperGroups(userId);
+        return groups;
     }
 
     @Override

@@ -102,6 +102,34 @@ public class GroupsServletDao<T extends Group> implements DbService {
         return null;
     }
 
+    public ArrayList readSuperGroups(int userId) {
+        ArrayList<Group> groups = new ArrayList<>();
+        String select = "SELECT *  " +
+                "FROM Person_has_Gruppe " +
+                "RIGHT JOIN Gruppe ON Person_has_Gruppe.Gruppe_id=Gruppe.id " +
+                "WHERE Gruppe.Gruppe_id is null AND Person_id=" + userId;
+
+        try{
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(select);
+            ResultSet rows = preppedStatement.executeQuery();
+
+            while (rows.next()){
+                Group group = new Group();
+
+                group.setId(rows.getInt("id"));
+                group.setName(rows.getString("name"));
+                group.setCalendarId(rows.getInt("Calendar_id"));
+                group.setSuperGroupId(rows.getInt("Gruppe_id"));
+                groups.add(group);
+            }
+
+        }catch (Exception e){
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return groups;
+    }
+
     @Override
     public ArrayList readAll() {
         ArrayList<Group> groups = new ArrayList<>();

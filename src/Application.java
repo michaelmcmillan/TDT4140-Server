@@ -268,7 +268,9 @@ public class Application {
         });
 
         get("/supergroups", (req,res) -> {
-            return JSONTranslator.toJSONGroups(Group.getAllSupergroups());
+            int userId = Integer.parseInt(res.raw().getHeader("User"));
+
+            return JSONTranslator.toJSONGroups(Group.getAllSupergroups(userId));
         });
 
         post("/group/:groupId/members", (req, res) -> {
