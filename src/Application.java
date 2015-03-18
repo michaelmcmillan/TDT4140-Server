@@ -4,6 +4,8 @@ import authentication.AuthenticationException;
 import database.AppointmentsServletDao;
 import database.GroupsServletDao;
 import email.Email;
+import email.EmailThread;
+import email.SimpleMail;
 import json.JSONTranslator;
 import logger.Logger;
 import models.*;
@@ -24,8 +26,11 @@ public class Application {
         Timer timer = new Timer();
         timer.schedule(new Alarm(),0, 5000);
 
+        EmailThread.getInstance().queue.add(new SimpleMail("jonaslaksen@live.com", "yoyo", "there"));
 
-        setIpAddress("78.91.83.32");
+        EmailThread.getInstance().emailRunner.start();
+
+        setIpAddress("78.91.72.61");
         setPort(1343);
 
         before((request, response) -> {
@@ -41,7 +46,6 @@ public class Application {
                     halt(401, "{\"message\": \"Du er ikke autentisert.\"}");
                 }
             }
-
         });
 
         after((req, res) -> {
@@ -138,7 +142,6 @@ public class Application {
                     superCalendar.setId(superCalendarId);
                 }
 
-
                 ArrayList<Appointment> appointmentsFromSubGroup = subCalendar.getAllAppointments(userId);
                 ArrayList<Appointment> appointmentsFromSuperGroup = superCalendar.getAllAppointments(userId);
 
@@ -218,7 +221,6 @@ public class Application {
             appointment.setPersonId(userId);
             appointment.create(Integer.parseInt(req.params("calendarId")));
 
-
             return appointment.invite(userId);
         });
 
@@ -243,8 +245,17 @@ public class Application {
             appointment.setEndTime(inputAppointment.getEndTime());
             appointment.setDescription(inputAppointment.getDescription());
             appointment.setRoomId(inputAppointment.getRoomId());
-
             appointment.update();
+
+            for (Person member : appointment.getMembers()) {
+                EmailThread.getInstance().queue.push(
+                    new SimpleMail(
+                        member.getEmail(),
+                        appointment.getTittel() + " har blitt endret",
+                        "Hei, avtalen du deltar på har blitt endret!")
+                );
+            }
+
             return "{ \"message:\" \"Appointment successfully updated\"}";
         });
 
@@ -253,9 +264,20 @@ public class Application {
 
             Group group = new Group();
             group.read(Integer.parseInt(req.params("groupId")));
-
+            String oldName = group.getName();
             group.setName(inputGroup.getName());
             group.update();
+
+            if (!oldName.equals(group.getName())) {
+                for (Person member : group.getAllMembers()) {
+                    EmailThread.getInstance().queue.push(
+                        new SimpleMail(
+                            member.getEmail(),
+                            group.getName() + " har fått nytt navn",
+                            "Hei, den het før " + oldName + " !")
+                    );
+                }
+            }
 
             return "{ \"message:\" \"Group successfully updated\"}";
         });
@@ -288,7 +310,14 @@ public class Application {
                 int userIdToAdd = array.getJSONObject(i).getInt("id");
                 String emailToAdd = array.getJSONObject(i).getString("email");
                 group.addUser(userIdToAdd);
-//                new Email(emailToAdd, "Lagt til", "lol").send();
+
+                EmailThread.getInstance().queue.push(
+                    new SimpleMail(
+                            emailToAdd,
+                            "Lagt til i gruppe",
+                            "Hei, du har blitt lagt til " + group.getName())
+                );
+
             }
 
             return "";
