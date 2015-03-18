@@ -10,6 +10,9 @@ import java.util.HashMap;
 
 public class Room implements Model{
 
+    RoomServlet roomServlet = new RoomServlet();
+
+
     //****TABLE ATTRIBUTES****
     private int id;
     private String name;
@@ -28,7 +31,11 @@ public class Room implements Model{
 
     @Override
     public void read(int id) {
+    }
 
+    public static ArrayList<Room> readAll() {
+        RoomServlet roomServlet = new RoomServlet();
+        return roomServlet.readAll();
     }
 
     @Override

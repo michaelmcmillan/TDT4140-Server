@@ -354,5 +354,9 @@ public class Application {
             appointment.read(Integer.parseInt(req.params("appointmentId")));
             return JSONTranslator.toJSONPersons(appointment.getMembers());
         });
+
+        get("/room", (req, res) ->{
+            return JSONTranslator.toJSONRooms(Room.readAll());
+        });
     }
 }

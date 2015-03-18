@@ -1,10 +1,13 @@
 package database;
 
+import logger.Logger;
 import models.Appointment;
+import models.Group;
 import models.Room;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -65,7 +68,28 @@ public class RoomServlet implements DbService {
 
     @Override
     public ArrayList readAll() {
-        return null;
+        String select =
+                "SELECT * from Room";
+        try {
+
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(select);
+
+            ResultSet rows = preppedStatement.executeQuery();
+
+            ArrayList<Room> rooms = new ArrayList<>();
+            while (rows.next()) {
+                Room room = new Room();
+                room.setId(rows.getInt("id"));
+                room.setName(rows.getString("name"));
+                room.setSeats(rows.getInt("seats"));
+                rooms.add(room);
+            }
+            return rooms;
+        } catch (SQLException error) {
+            Logger.console(error.getMessage());
+            return null;
+        }
     }
 
     @Override
