@@ -15,13 +15,7 @@ public class RoomServlet implements DbService {
 
     DatabaseConnection database = DatabaseConnection.getInstance();
 
-    public ArrayList<Room> readRecommendation(int appointmentId, int seats){
-
-        Appointment appointment = new Appointment();
-        appointment.read(appointmentId);
-
-        long startTime = RoomServlet.dateToUnix(appointment.getStartTime());
-        long endTime = RoomServlet.dateToUnix(appointment.getEndTime());
+    public ArrayList<Room> readRecommendation(long startTime, long endTime, int seats){
 
         String select = "SELECT id as Room_id, name, seats FROM Room\n" +
                 "WHERE id not in ( \n" +
@@ -86,14 +80,5 @@ public class RoomServlet implements DbService {
     @Override
     public boolean delete(int id) {
         return false;
-    }
-
-    public static long dateToUnix(String date){
-        try {
-            return new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date).getTime() / 1000;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return 0;
     }
 }

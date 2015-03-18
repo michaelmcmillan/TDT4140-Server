@@ -308,9 +308,14 @@ public class Application {
             return "";
         });
 
-        get("/room/:seats/:appointmentId", (req, res) -> {
+        get("/room/:seats/:fromyyyyMMddHHmmss/:toyyyyMMddHHmmss", (req, res) -> {
 
-            ArrayList<Room> rooms = Room.readRecommendation(Integer.parseInt(req.params("appointmentId")), Integer.parseInt(req.params("seats")));
+            long fromTime = new java.text.SimpleDateFormat("yyyyMMddHHmmss").parse(req.params("fromyyyyMMddHHmmss")).getTime() / 1000;
+            long toTime   = new java.text.SimpleDateFormat("yyyyMMddHHmmss").parse(req.params("toyyyyMMddHHmmss")).getTime() / 1000;
+
+
+
+            ArrayList<Room> rooms = Room.readRecommendation(fromTime, toTime, Integer.parseInt(req.params("seats")));
             return JSONTranslator.toJSONRooms(rooms);
         });
     }
