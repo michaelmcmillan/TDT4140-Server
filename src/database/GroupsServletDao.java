@@ -16,6 +16,7 @@ public class GroupsServletDao<T extends Group> implements DbService {
     DatabaseConnection database = DatabaseConnection.getInstance();
 
 
+
     public boolean addUser(int groupId, int personId){
         HashMap<String, Object> map = new HashMap<>();
 

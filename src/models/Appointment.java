@@ -5,6 +5,7 @@ import database.AppointmentsServletDao;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Appointment implements Model {
@@ -43,6 +44,10 @@ public class Appointment implements Model {
 
     public boolean isParticipating(int userId){
         return appServlet.isParticipating(userId, id);
+    }
+
+    public ArrayList<Person> getMembers(){
+        return appServlet.getMembers(this.id);
     }
 
     public boolean removeUser(int userId){

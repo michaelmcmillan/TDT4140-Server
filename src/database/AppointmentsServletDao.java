@@ -2,6 +2,8 @@ package database;
 
 import logger.Logger;
 import models.Appointment;
+import models.Person;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +29,46 @@ public class AppointmentsServletDao<T extends Appointment> implements DbService 
             Logger.console(error.getMessage());
         }
         return false;
+    }
+
+    public static int nAttendies (int appointmentId){
+        DatabaseConnection database = DatabaseConnection.getInstance();
+        String select = "SELECT count(*) as total FROM Person_has_Appointment WHERE Appointment_id=" + appointmentId;
+
+        try{
+
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(select);
+            ResultSet rows = preppedStatement.executeQuery();
+            if (rows.next())
+                return rows.getInt("total");
+        }catch (SQLException error){
+            Logger.console(error.getMessage());
+        }
+        return 0;
+    }
+
+    public ArrayList<Person> getMembers (int appointmentId){
+        DatabaseConnection database = DatabaseConnection.getInstance();
+        String select = "SELECT * FROM Person_has_Appointment WHERE Appointment_id=" + appointmentId;
+        ArrayList<Person> persons = new ArrayList<>();
+        try{
+
+            PreparedStatement preppedStatement = null;
+            preppedStatement = database.getConn().prepareStatement(select);
+            ResultSet rows = preppedStatement.executeQuery();
+            while (rows.next()){
+                Person person = new Person();
+                person.read(rows.getInt("Person_id"));
+                persons.add(person);
+            }
+
+            return persons;
+
+        }catch (SQLException error){
+            Logger.console(error.getMessage());
+        }
+        return null;
     }
 
 

@@ -1,6 +1,8 @@
 import alarm.Alarm;
 import authentication.Authentication;
 import authentication.AuthenticationException;
+import database.AppointmentsServletDao;
+import database.GroupsServletDao;
 import email.Email;
 import json.JSONTranslator;
 import logger.Logger;
@@ -215,6 +217,8 @@ public class Application {
             Appointment appointment = JSONTranslator.toAppointment(new JSONObject(req.body()));
             appointment.setPersonId(userId);
             appointment.create(Integer.parseInt(req.params("calendarId")));
+
+
             return appointment.invite(userId);
         });
 
@@ -238,6 +242,7 @@ public class Application {
             appointment.setStartTime(inputAppointment.getStartTime());
             appointment.setEndTime(inputAppointment.getEndTime());
             appointment.setDescription(inputAppointment.getDescription());
+            appointment.setRoomId(inputAppointment.getRoomId());
 
             appointment.update();
             return "{ \"message:\" \"Appointment successfully updated\"}";
@@ -308,15 +313,46 @@ public class Application {
             return "";
         });
 
-        get("/room/:seats/:fromyyyyMMddHHmmss/:toyyyyMMddHHmmss", (req, res) -> {
+//        get("/room/appointment/:appointmentId/:fromyyyyMMddHHmmss/:toyyyyMMddHHmmss", (req, res) -> {
+//
+//            int seats = AppointmentsServletDao.nAttendies(Integer.parseInt(req.params("appointmentId")));
+//
+//            long fromTime = new java.text.SimpleDateFormat("yyyyMMddHHmmss").parse(req.params("fromyyyyMMddHHmmss")).getTime() / 1000;
+//            long toTime   = new java.text.SimpleDateFormat("yyyyMMddHHmmss").parse(req.params("toyyyyMMddHHmmss")).getTime() / 1000;
+//
+//            ArrayList<Room> rooms = Room.readRecommendation(fromTime, toTime, seats);
+//            return JSONTranslator.toJSONRooms(rooms);
+//        });
 
-            long fromTime = new java.text.SimpleDateFormat("yyyyMMddHHmmss").parse(req.params("fromyyyyMMddHHmmss")).getTime() / 1000;
-            long toTime   = new java.text.SimpleDateFormat("yyyyMMddHHmmss").parse(req.params("toyyyyMMddHHmmss")).getTime() / 1000;
+        post("/room/appointment/:appointmentId", (req, res) -> {
 
+            JSONObject jsonObject = new JSONObject(req.body());
+            jsonObject.getString("from");
+            jsonObject.getString("to");
 
-
-            ArrayList<Room> rooms = Room.readRecommendation(fromTime, toTime, Integer.parseInt(req.params("seats")));
+            int seats = AppointmentsServletDao.nAttendies(Integer.parseInt(req.params("appointmentId")));
+            ArrayList<Room> rooms = Room.readRecommendation(jsonObject.getString("from"), jsonObject.getString("to"), seats);
             return JSONTranslator.toJSONRooms(rooms);
+        });
+
+        post("/room/group/:groupId", (req, res) -> {
+
+            Group group = new Group();
+            group.read(Integer.parseInt(req.params("groupId")));
+            int seats = group.getAllMembers().size();
+
+            JSONObject jsonObject = new JSONObject(req.body());
+            jsonObject.getString("from");
+            jsonObject.getString("to");
+
+            ArrayList<Room> rooms = Room.readRecommendation(jsonObject.getString("from"), jsonObject.getString("to"), seats);
+            return JSONTranslator.toJSONRooms(rooms);
+        });
+
+        get("/appointment/:appointmentId/members", (req, res) -> {
+            Appointment appointment = new Appointment();
+            appointment.read(Integer.parseInt(req.params("appointmentId")));
+            return JSONTranslator.toJSONPersons(appointment.getMembers());
         });
     }
 }

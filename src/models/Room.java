@@ -16,7 +16,7 @@ public class Room implements Model{
     private int seats;
     //************************
 
-    public static ArrayList<Room> readRecommendation(long fromTime, long toTime, int seats){
+    public static ArrayList<Room> readRecommendation(String fromTime, String toTime, int seats){
         RoomServlet roomServlet = new RoomServlet();
         return roomServlet.readRecommendation(fromTime, toTime, seats);
     }

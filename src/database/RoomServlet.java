@@ -15,20 +15,16 @@ public class RoomServlet implements DbService {
 
     DatabaseConnection database = DatabaseConnection.getInstance();
 
-    public ArrayList<Room> readRecommendation(long startTime, long endTime, int seats){
+    public ArrayList<Room> readRecommendation(String startTime, String endTime, int seats){
 
-        String select = "SELECT id as Room_id, name, seats FROM Room\n" +
-                "WHERE id not in ( \n" +
-                "SELECT Room_id\n" +
-                "FROM Appointment\n" +
-                "JOIN Room\n" +
-                "ON Room.id = Appointment.Room_id\n" +
-                "WHERE (unix_timestamp(start_time) > " + startTime + " and unix_timestamp(end_time) < " + endTime + ") or\n" +
-                "\t\t unix_timestamp(start_time) > " + startTime + " and unix_timestamp(start_time) > "+ endTime + " or\n" +
-                "         unix_timestamp(end_time) > " + startTime + " and unix_timestamp(end_time) < " + endTime + "\n" +
-                ")\n" +
-                "and seats >=" + seats + " " +
-                "ORDER BY seats asc";
+        String select = "SELECT id as Room_id, name, seats FROM Room WHERE id not in ( " +
+                "SELECT Room_id FROM Appointment " +
+                "JOIN Room ON Room.id = Appointment.Room_id " +
+                "WHERE (start_time > '" + startTime + "' and start_time < '"+ endTime + "')  " +
+                "or    (end_time > '" + startTime + "' and end_time < '" + endTime + "') " +
+        ") " +
+        "and seats >=" + seats + " " +
+        "ORDER BY seats asc";
 
         try {
 

@@ -79,10 +79,8 @@ public class JSONTranslator {
         appointment.setDescription(jsonObject.getString("description"));
         appointment.setStartTime(jsonObject.getString("start_time"));
         appointment.setEndTime(jsonObject.getString("end_time"));
-        if (appointment.getRoomId() > 0)
-            appointment.setRoomId(jsonObject.getInt("Room_id"));
-        if (appointment.getPersonId() > 0)
-            appointment.setPersonId(jsonObject.getInt("Person_id"));
+        appointment.setRoomId(jsonObject.getInt("Room_id"));
+        appointment.setPersonId(jsonObject.getInt("Person_id"));
         return appointment;
     }
 
