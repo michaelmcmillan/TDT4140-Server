@@ -3,6 +3,7 @@ package json;
 import models.Appointment;
 import models.Group;
 import models.Person;
+import models.Room;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -119,6 +120,23 @@ public class JSONTranslator {
         return jsonObject;
     }
 
+    public static JSONObject toJSON(Room room) throws JSONException{
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", room.getId());
+        jsonObject.put("name", room.getName());
+        jsonObject.put("seats", room.getSeats());
+        return jsonObject;
+    }
+
+    public static JSONArray toJSONRooms(ArrayList<Room> rooms) throws JSONException{
+        JSONArray jsonArray = new JSONArray();
+
+        for (Room room: rooms){
+            jsonArray.put(toJSON(room));
+        }
+        return jsonArray;
+    }
+
     public static JSONArray toJSONAppointments(ArrayList<Appointment> appointments) throws JSONException{
         JSONArray jsonArray = new JSONArray();
 
@@ -166,5 +184,7 @@ public class JSONTranslator {
         }
         return jsonArray;
     }
+
+
 
 }

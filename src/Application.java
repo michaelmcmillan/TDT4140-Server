@@ -4,10 +4,7 @@ import authentication.AuthenticationException;
 import email.Email;
 import json.JSONTranslator;
 import logger.Logger;
-import models.Appointment;
-import models.Calendar;
-import models.Group;
-import models.Person;
+import models.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.text.SimpleDateFormat;
@@ -26,8 +23,8 @@ public class Application {
         timer.schedule(new Alarm(),0, 5000);
 
 
-        setIpAddress("78.91.80.207");
-        setPort(1342);
+        setIpAddress("78.91.83.32");
+        setPort(1343);
 
         before((request, response) -> {
 
@@ -309,6 +306,12 @@ public class Application {
             if (appointment.getPersonId() == userId)
                 appointment.delete();
             return "";
+        });
+
+        get("/room/:seats/:appointmentId", (req, res) -> {
+
+            ArrayList<Room> rooms = Room.readRecommendation(Integer.parseInt(req.params("appointmentId")), Integer.parseInt(req.params("seats")));
+            return JSONTranslator.toJSONRooms(rooms);
         });
     }
 }
