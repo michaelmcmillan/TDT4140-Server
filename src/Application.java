@@ -23,15 +23,13 @@ import static spark.Spark.*;
 public class Application {
 
     public static void main(String[] args) {
+        /* Cron-jobber */
         Timer timer = new Timer();
         timer.schedule(new Alarm(),0, 5000);
-
-        EmailThread.getInstance().queue.add(new SimpleMail("jonaslaksen@live.com", "yoyo", "there"));
-
         EmailThread.getInstance().emailRunner.start();
 
-        setIpAddress("78.91.72.61");
-        setPort(1343);
+        setIpAddress("127.0.0.1");
+        setPort(1345);
 
         before((request, response) -> {
 
@@ -162,7 +160,6 @@ public class Application {
         });
 
         get("/appointment/:appointmentId", (req, res) ->{
-
             Appointment appointment = new Appointment();
             appointment.read(Integer.parseInt(req.params("appointmentId")));
             return JSONTranslator.toJSON(appointment);
@@ -325,9 +322,9 @@ public class Application {
 
         delete("/group/:groupId", (req, res) -> {
             int userId = Integer.parseInt(res.raw().getHeader("User"));
-
             Group group = new Group();
             group.setId(Integer.parseInt(req.params("groupId")));
+
 
             return group.removeUser(userId);
         });

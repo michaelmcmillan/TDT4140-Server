@@ -13,7 +13,7 @@ public class EmailThread {
             while (true) {
                 if (EmailThread.getInstance().queue.size() > 0) {
                     SimpleMail current = queue.pop();
-                    //new Email(current.to, current.subject, current.body).send();
+                    new Email(current.to, current.subject, current.body).send();
                     System.out.println(current.subject + " ble sendt til " + current.to);
                     EmailThread.getInstance().queue.remove(current);
                 }
